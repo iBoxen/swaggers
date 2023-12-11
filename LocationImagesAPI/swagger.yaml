@@ -1,371 +1,50 @@
 swagger: '2.0'
 info:
   version: 1.0.0
-  title: iBoxen carrier integration
-host: integration.iboxen-staging.se
-basePath: /carrier
+  title: Location Images API
+host: images.iboxen-staging.se
+basePath: /
 schemes:
 - https
 paths:
-  /delivery:
-    post:
-      summary: Add a parcel to iBoxen
-      consumes:
-      - application/json
-      produces:
-      - application/json
-      parameters:
-      - in: body
-        name: body
-        required: true
-        schema:
-          $ref: '#/definitions/delivery'
-      responses:
-        400:
-          description: Invalid input
-        404:
-          description: Error with reason
-        '200':
-          description: ''
-          examples: 
-            application/json: [
-  {
-  location: {
-    id: '6200d35f24fe6e3dd620942d',
-    address: { street: 'Götaforsvägen 9', zip: '12266', city: 'Stockholm' },
-    coordinates: [ 59.2712095, 18.0565393 ]
-  },
-  box: 15
-} 
-  ]
-        '201':
-          description: 'The parcel has been created'
-          examples:
-            application/json: {"status": "ok", "message": "Parcel is pre-booked" }
-    put:
-      summary: Update a parcel
-      consumes:
-      - application/json
-      produces:
-      - application/json
-      parameters:
-      - in: body
-        name: body
-        required: true
-        schema:
-          $ref: '#/definitions/deliveryUpdate'
-      responses:
-        '200':
-          description: ''
-          examples: 
-            application/json: {"location":{"id":"605b59dccd8b1c5ecad9c769","address":{"street":"Götaforsvägen 21", "zip":"12266", "city":"Enskede","locationDescriptionShort":"Short location description","locationDescriptionLong":"A looong description of the location placement"},"coordinates":[50,50]},"box":12}
-        400:
-          description: Invalid input
-        404:
-          description: Error with reason
-    
-  
-  /status:
-    post:
-      summary: Add status to a parcel
-      consumes:
-      - application/json
-      produces:
-      - application/json
-      parameters:
-      - in: body
-        name: body
-        required: true
-        schema:
-          $ref: '#/definitions/deliveryStatus'
-      responses:
-        400:
-          description: Invalid input
-    
+ /location:
     get:
-      summary: Get parcels statuses
-      description: 'Query parameters, ex: /parcelId=12345&parcelId=00006'
-      parameters:
-        - name: parcelId
-          in: query
-          type: string
-          required: true
-      consumes:
-      - application/json
+      summary: Get location images
+      description: Example URL /location/60477c10093d2f0008cdf0ce
       produces:
       - application/json
-      responses:
-        '200':
-          description: 'An array with parcel statuses. statusNames: allocated, on-way, in-box, collected, marked-for-return, driver-picked-up, cancelled, deviation. Deviation has a "data"-field with the error code.'
-          examples: 
-            application/json: [{ "parcelId": "12345", "locationId": "604b5c2848ff1d935c2bb557", "locationNumber": "000123", "currentStatus": "in-box", "statuses": [{"statusName":"in-box", "created":"iso date string"}, {"statusName":"deviation", "data":"lockDidNotOpen", "created":"iso date string"}] }]
+      parameters:
+      - in: header
+        name: Authorization
+        description: Header format 'basic Base64("username:password")'
+        type: string
+        required: true
 
-          
-  /locations:
-    get:
-      summary: Get a list of locations
-      consumes:
-      - application/json
-      produces:
-      - application/json
-      responses:
-        '200':
-          description: ''
-          examples: 
-            application/json: [
-  {
-    "locationId": "5ff8232af30dfcffbcdc7b9b",
-    "locationNumber": "000123",
-    "address": {
-      "street": "Odengatan 1",
-      "zip": "11424",
-      "city": "Stockholm"
-    },
-    "coordinates": [
-      59.34678,
-      18.06671
-    ],
-    "locationDescriptionShort":"Description of location's placement",
-    "locationDescriptionLong":"Shortened description of location's placement"
-  }]
-      
-    post:
-      summary: (Get) a list of locations
-      consumes:
-      - application/json
-      produces:
-      - application/json
-      parameters:
-      - in: body
-        name: body
+      - in: path
+        name: location id
+        type: string
         required: true
-        schema:
-          $ref: '#/definitions/locations'
-      responses:
-        400:
-          description: Invalid input
-        '200':
-          description: ''
-          examples: 
-            application/json: [
-  {
-    "locationId": "5ff8232af30dfcffbcdc7b9b",
-    "locationNumber": "000123",
-    "address": {
-      "street": "Odengatan 1",
-      "zip": "11424",
-      "city": "Stockholm"
-    },
-    "coordinates": [
-      59.34678,
-      18.06671
-    ],
-    "distanceFromQueriedAddress": 1148,
-    "lowBoxesAvailable": true,
-    "locationDescriptionShort":"Description of location's placement",
-    "locationDescriptionLong":"Shortened description of location's placement"
-  }]
 
-  /locations/area:
-    get:
-      summary: A less granular query using area specific details, such as zip-codes.
-      description: 'Query parameters, ex: /area?zip=12266'
-      parameters:
-        - name: zip
-          in: query
-          type: string
-        - name: city
-          in: query
-          type: string
-            
       responses:
+        401:
+          description: Unauthorized
+        404:
+          description: Invalidlocation
         200:
-          description: Array of locations
-          
-definitions:
-  delivery:
-    required: 
-     - senderName
-     - period
-    properties:
-      receiver:
-          $ref: '#/definitions/deliveryReceiver'
-        
-      delivery:
-        $ref: '#/definitions/deliveryDetails'
-        
-      senderName:
-        type: string
-        description: 'The retailer shop'
-      requiresLowBox:
-        type: boolean
-        description: 'The receiver needs a box close to the bottom of the locker'
-      preferedLocations:
-        type: array
-        example: ["604f73fd02fc690ae7d7e57f", "000790"]
-        items:
-          type: string
-        description: 'Provided if specific locations are wanted, prioritized by array index. Can be either locationId or locationNumber'
-      preBooked:
-        type:  boolean
-        default: false
-        description: If this flag is set to true the system will not try to allocate a box. It will only register the parcel and set the status to 'created'. This is useful if the carrier wants to make a 'soft' allocation and make a real box allocation in a later time.
-
-#
-
-  deliveryReceiver:
-    type: object
-    required: 
-      - phoneNumber
-      - firstName
-    properties:
-      phoneNumber:
-        type: string
-      firstName:
-        type: string
-      lastName:
-        type: string
-      email:
-        type: string
-        
-      address:
-        $ref: '#/definitions/address'
-
-#
-
-  address:
-    type: object
-    required:
-      - street
-      - zip
-      - city
-    properties:
-      street:
-        type: string
-        description: 'Full street with number'
-      zip:
-        type: string
-      city:
-        type: string
-
-#
-
-  deliveryDetails:
-    type: object
-    properties:
-      parcelId:
-        type: string
-        description: 'Unique id, same value as displayed with a barcode on the parcel'
-      shipmentId:
-        type: string
-      dimensions:
-        description: 'Parcel dimensions millimeters'
-        type: array
-        items:
-          type: string
-    required:
-      - parcelId
-      - dimensions
-      
-#
-
-  deliveryStatus:
-    type: object
-    required:
-      - parcelId
-      - name
-    properties:
-      parcelId:
-        type: string
-      name:
-        type: string
-        description: 'Status names: on-way, marked-for-return, cancelled'
-        
-#
-
-  locations:
-    type: object
-    required:
-     - street
-     - city
-     - zip
-    properties:
-      address:
-        $ref: '#/definitions/address'
-      query:
-        $ref: '#/definitions/locationsQuery'
-        
-#
-
-  parcelStatus:
-    type: array
-    items:
-      type: object
-      properties:
-        parcelId:
-          type: string
-            
-#
-
-  locationsQuery:
-    type: object
-    properties:
-      locationMaxDistance:
-        type: number
-        description: Max distance from origin address in meter
-      locationsMaxQty:
-        type: number
-        description: Max number in results
-      requiresLowBox:
-        type: boolean
-        description: Require locations with low boxes <120cm height available
-        default: false
-      returnNumberOfAvailableBoxes:
-        type: boolean
-        description: Project number of available boxes on the location to property 'returnNumberOfAvailableBoxes'
-        default: false
-      includeFreeLocationsOnly:
-        type: boolean
-        description: The query should only return locations that has free boxes
-        default: false
-      dimensions:
-        description: 'Parcel dimensions millimeters'
-        type: array
-        items:
-          type: integer
-        example: [10, 10, 10]
-        
-#
-
-  deliveryUpdate:
-    type: object
-    required:
-      - parcelId
-    properties:
-      parcelId:
-        type: string
-      preferedLocations:
-        type: array
-        items:
-          type: string
-        description: 'Provided if a specific location is wanted, prioritized by array index. Can be either locationId or locationNumber'
-      #requiresLowBox:
-       # type: boolean
-        #description: 'The receiver needs a box close to the bottom of the locker'
-      dimensions:
-        description: 'Parcel dimensions millimeters'
-        type: array
-        items:
-          type: integer
-        default: []
-        example: [1, 2, 3]
-      statusName:
-        type: string
-        description: Status to transition into
-      receiver:
-        type: object
-        properties:
-          phoneNumber:
-            type: string
-          email:
-            type: string
+          description: 'Returns the individual locker images at a location'
+          examples: 
+            application/json: {
+  "A": [
+    {
+      "expiresAt": "2023-12-18T12:00:07Z",
+      "prio": 0,
+      "url": "https://uploaded-location-images.s3.eu-north-1.amazonaws.com/production/Axel/2021-11-16/ebaaf97f-c7cf-46f7-8e4d-7a79fd18cfb5.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQJS2D7QFM7WLOAPK%2F20231211%2Feu-north-1%2Fs3%2Faws4_request&X-Amz-Date=20231211T120007Z&X-Amz-Expires=604800&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJz%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCmV1LW5vcnRoLTEiSDBGAiEAo9mRQ%2Boqj4ui%2F1%2BewoWsSNGzVvx1H4SBI5U0CIjtco4CIQDm3ddD6ykR9UaNxTUt0tJEQi4qv499Y5n4Fds8XOW%2FkiqQAwgVEAIaDDAyMDU5MDA5OTQ2NiIMDLC8Ay7iwR9usoIBKu0Cg5ExL8WIBgk6jvcpyJUG036KFUJVlW68c5hq1%2FaLgyh%2FPRtZ6co%2BwNiI5t4RD%2BQfyL9XVwHQzamJ%2B4eA%2BUZndy2ODMKlpnlCnzFj3m2ie0GHOboppFB%2BKubqmy%2FVn0Hg4m7E0Nn24bEJ5fafRYu02nNhGm%2Bbo7PQ%2FKyHs1oT00iTaBIut%2FGl1OQ71vCKYKNcW6yOHGMScKdmmPrLUHjC550Yc2peQ%2FJeCvMmwzE5jA1LBUZAEF39aRf3oiX9fcfsh6IYx1QUZ160XtzKPpyd69cJ%2BuZ65Y23eVCuxGnhFqOKZGGrCHEbZtVrP6QJkN1VpcouPxVJYP2Bg1ZcyZqzbNxeS7j263IXvimNjLU%2ByGcjk4KlJjowBTKNwolCnp0Z91Bajp9Y3TORZHJsww8g%2Fdn6qGhsVeI4OwSNmxUO3izRhNSQwKYnDc00bwPAIy8J9cPS8Lmr8hPB8ma3qclDRRm3vvJytMB35uS4mq8w4vLbqwY6nAGZOaTYyD9%2F4uZWxH34EGPAm%2Fw6TgVEUZz01vBtN%2B2a7W8qN%2BWgXmajhjRZ%2F8XfOB4bJ4TJdXKpfh2p%2BoJA3SvMAiUfoCMxc5lXgNRCUogfi3pKR%2BiNhY4mA%2FH7Xt8lh9UlaTCYoKPELd5JJ75gWeWTHwsLLXhHMeoYZNIZCDh%2BuZ%2FBMgSXRPB%2FL6NKEgJEBs57ECtSjlA21o4GSr0%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=0397a212b6024a7d2fe6cb0fe237e7017aa02e1981fa70b7aaaf37fb123fbbd1"
+    },
+    {
+      "expiresAt": "2023-12-18T12:00:07Z",
+      "prio": 1,
+      "url": "https://uploaded-location-images.s3.eu-north-1.amazonaws.com/production/Axel/2021-11-16/5c94a13c-df8b-4c64-b866-a0e3687d893e.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIAQJS2D7QFM7WLOAPK%2F20231211%2Feu-north-1%2Fs3%2Faws4_request&X-Amz-Date=20231211T120007Z&X-Amz-Expires=604800&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJz%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCmV1LW5vcnRoLTEiSDBGAiEAo9mRQ%2Boqj4ui%2F1%2BewoWsSNGzVvx1H4SBI5U0CIjtco4CIQDm3ddD6ykR9UaNxTUt0tJEQi4qv499Y5n4Fds8XOW%2FkiqQAwgVEAIaDDAyMDU5MDA5OTQ2NiIMDLC8Ay7iwR9usoIBKu0Cg5ExL8WIBgk6jvcpyJUG036KFUJVlW68c5hq1%2FaLgyh%2FPRtZ6co%2BwNiI5t4RD%2BQfyL9XVwHQzamJ%2B4eA%2BUZndy2ODMKlpnlCnzFj3m2ie0GHOboppFB%2BKubqmy%2FVn0Hg4m7E0Nn24bEJ5fafRYu02nNhGm%2Bbo7PQ%2FKyHs1oT00iTaBIut%2FGl1OQ71vCKYKNcW6yOHGMScKdmmPrLUHjC550Yc2peQ%2FJeCvMmwzE5jA1LBUZAEF39aRf3oiX9fcfsh6IYx1QUZ160XtzKPpyd69cJ%2BuZ65Y23eVCuxGnhFqOKZGGrCHEbZtVrP6QJkN1VpcouPxVJYP2Bg1ZcyZqzbNxeS7j263IXvimNjLU%2ByGcjk4KlJjowBTKNwolCnp0Z91Bajp9Y3TORZHJsww8g%2Fdn6qGhsVeI4OwSNmxUO3izRhNSQwKYnDc00bwPAIy8J9cPS8Lmr8hPB8ma3qclDRRm3vvJytMB35uS4mq8w4vLbqwY6nAGZOaTYyD9%2F4uZWxH34EGPAm%2Fw6TgVEUZz01vBtN%2B2a7W8qN%2BWgXmajhjRZ%2F8XfOB4bJ4TJdXKpfh2p%2BoJA3SvMAiUfoCMxc5lXgNRCUogfi3pKR%2BiNhY4mA%2FH7Xt8lh9UlaTCYoKPELd5JJ75gWeWTHwsLLXhHMeoYZNIZCDh%2BuZ%2FBMgSXRPB%2FL6NKEgJEBs57ECtSjlA21o4GSr0%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=ae1daf85704ac3192283f191546cf489e43bc2a089e50a6c882948801a2cb97e"
+    }
+  ],
+  "B": []
+}

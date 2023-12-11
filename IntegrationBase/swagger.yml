@@ -1,0 +1,546 @@
+swagger: '2.0'
+info:
+  version: 1.0.0
+  title: iBoxen IntegrationBase
+               
+host: delivery-api.iboxen-staging.se
+schemes:
+- https
+paths:
+  /token:
+    get:
+      summary: Get access token
+      description: Login using credentials to get a new access token. This token is then used in your upcoming requests in the 'Authorization'-header.
+      produces:
+      - application/json
+      parameters:
+      - in: header
+        name: Authorization
+        description: Header format 'basic Base64("username:password")'
+        type: string
+        required: true
+      responses:
+        400:
+          description: Invalid login
+        200:
+          description: ''
+          examples: 
+            application/json: {
+  "ok": true,
+  "data": [
+    {
+      "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHBpcmVzIjoiMjAyNC0wMy0wOVQxNDozMDo1Ny4zNjVaIiwiY2FycmllciI6IjYzNWZiZWRhODQwNjZmNWE2YzA4ZTBkNCJ9.GsnToVYwHmuBiObrRxQqKpx8fpQeK9gf3ATejWn8Jxo",
+      "expires": 1678379667664
+    }
+  ],
+  "status": 200
+}
+      
+  /pickup:
+    post:
+      summary: Create a pickup order
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/POST_pickup_body'
+      responses:
+        400:
+          description: DeliveryNotificationValidationError
+        404:
+          description: Error with reason
+        200:
+          description: ''
+          examples: 
+            application/json: {
+  "ok": true,
+  "data": [
+    {
+      "location": {
+        "id": "635116a82e76570009080ba4",
+        "address": {
+          "street": "Manttaalitie 8",
+          "city": "Vantaa",
+          "zip": "01530",
+          "country": "FI"
+        },
+        "coordinates": [
+          60.297610044784975,
+          24.977893251925707
+        ]
+      },
+      "boxId": 9,
+      "boxMark": "A"
+    }
+  ],
+  "status": 201
+}
+
+    patch:
+      summary: Update pickup booking details (Soon to be implemented)
+      description: Used to update parcel with new details or changing the target booked location
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/PATCH_delivery_body'
+      responses:
+        '200':
+          description: ''
+          examples: 
+            application/json: {"location":{"id":"605b59dccd8b1c5ecad9c769","address":{"street":"Götaforsvägen 21", "zip":"12266", "city":"Enskede","locationDescription":"A description of the parcel locker location"},"coordinates":[50,50]}}
+        400:
+          description: Invalid input
+        404:
+          description: Error with reason
+          
+  /delivery:
+    post:
+      summary: Add a parcel to iBoxen
+      description: Request a parcel to be allocated to a box
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: header
+        name: Authorization
+        type: string
+        required: true
+      - in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/POST_delivery_body'
+      responses:
+        400:
+          description: DeliveryNotificationValidationError
+        404:
+          description: Error with reason
+        200:
+          description: ''
+          examples: 
+            application/json: {
+  "ok": true,
+  "data": [
+    {
+      "location": {
+        "id": "635116a82e76570009080ba4",
+        "address": {
+          "street": "Manttaalitie 8",
+          "city": "Vantaa",
+          "zip": "01530",
+          "country": "FI"
+        },
+        "coordinates": [
+          60.297610044784975,
+          24.977893251925707
+        ]
+      },
+      "boxId": 9,
+      "boxMark": "A"
+    }
+  ],
+  "status": 201
+}
+  
+        '201':
+          description: 'The parcel has been created'
+          examples:
+            application/json: {"status": "ok", "message": "Parcel is pre-booked" }
+    patch:
+      summary: Update delivery booking details (Soon to be implemented)
+      description: Used to update parcel with new details or changing the target booked location
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/PATCH_delivery_body'
+      responses:
+        '200':
+          description: ''
+          examples: 
+            application/json: {"location":{"id":"605b59dccd8b1c5ecad9c769","address":{"street":"Götaforsvägen 21", "zip":"12266", "city":"Enskede","locationDescription":"A description of the parcel locker location"},"coordinates":[50,50]}}
+        400:
+          description: Invalid input
+        404:
+          description: Error with reason
+          
+    # get:
+    #   summary: Get delivery (Soon to be implemented)
+    #   description: 'Query parameters, ex: /parcelId=12345&parcelId=00006'
+    #   parameters:
+    #     - name: parcelId
+    #       in: query
+    #       type: string
+    #       required: true
+    #   consumes:
+    #   - application/json
+    #   produces:
+    #   - application/json
+    #   responses:
+    #     '200':
+    #       description: 'An array with parcel statuses. statusNames: allocated, on-way, in-box, collected, marked-for-return, driver-picked-up, cancelled, deviation. Deviation has a "data"-field with the error code.'
+    #       examples: 
+    #         application/json: [{ "_id": "633ec9e29d493f18b7ddcdb3", "parcelId": "12345", "currentStatus": "in-box", "statuses": [{"statusName":"in-box", "created":"2022-11-29T08:59:48.073Z"}, {"statusName":"deviation", "data":"lockDidNotOpen", "created":"2022-11-29T08:59:48.073Z"}], "locationId": "604b5c2848ff1d935c2bb557",  "errors": [{"created": "2022-11-29T08:59:48.073Z", "name": "NoLocationFound", "message": "NoLocationFound: Could not find location in proximity of address"}] }]
+            
+  
+  /status:
+    post:
+      summary: Add status to a parcel
+      description: Used to move parcel to new statuses
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/POST_status_body'
+      responses:
+        400:
+          description: Invalid input
+        404:
+          description: Error with reason
+        200:
+          description: ''
+          examples: 
+            application/json: {
+  "ok": true,
+  "data": [
+    {
+      "location": {
+        "id": "6322d3a37d6dff000902bbee",
+        "address": {
+          "street": "Manttaalitie 7",
+          "city": "Vantaa",
+          "zip": "01530",
+          "country": "SE"
+        },
+        "coordinates": [
+          60.2982203932194,
+          24.9792410619557
+        ]
+      },
+      "box": 8,
+      "parcelId": "17035960",
+      "currentStatus": "in-box"
+    }
+  ],
+  "status": 201
+}
+    
+  /locations:
+    get:
+      summary: Get a list of locations
+      parameters:
+        - in: query
+          name: address.street
+          type: string
+          required: false
+          description: Street address
+        - in: query
+          name: address.city
+          type: string
+          required: false
+          description: City
+        - in: query
+          name: address.zip
+          type: integer
+          required: false
+          description: Zip code
+        - in: query
+          name: filter.locationMaxDistance
+          type: string
+          required: false
+          default: 500
+          description: Maximum distance (meters) from address to fetch locations
+        - in: query
+          name: filter.locationsMaxQty
+          type: string
+          required: false
+          default: 10
+          description: Maximum number of returned locations
+        - in: query
+          name: filter.requiresLowBox
+          type: boolean
+          required: false
+          default: false
+          description: Add filter to only include results with low boxes
+        - in: query
+          name: filter.includeFreeLocationsOnly
+          type: boolean
+          required: false
+          default: false
+          description: Add filter to only include locations with free boxes
+        - in: query
+          name: option.returnNumberOfAvailableBoxes
+          type: boolean
+          required: false
+          default: false
+          description: Show number of available boxes for each location
+        - in: query
+          name: query.locationNumbers
+          type: string
+          required: false
+          description: Query specific locationNumbers
+        - in: query
+          name: query.fullDescriptions
+          type: boolean
+          required: false
+          default: false
+          description: Query to return the full descriptions of the locations
+        - in: query
+          name: option.returnBoxTypes
+          type: boolean
+          required: false
+          default: false
+          description: "Add property to body: boxSizes, see Model property_boxSizes"
+        - in: query
+          name: option.transports
+          type: string
+          required: false
+          default: walking,driving
+          description: Comma-separated list of optional transports which should be considered when calculating the returned list of locations. walking, driving. Default both
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        '200':
+          description: ''
+          examples: 
+            application/json: [
+      {
+      "locationId": "617a60dd94fcf00009f442cb",
+      "locationNumber": "000302",
+      "created": "2021-10-28T08:35:41.000Z",
+      "address": {
+        "street": "Barnängs Tvärgränd 1",
+        "zip": "11643",
+        "city": "Stockholm"
+      },
+      "coordinates": [
+        59.30797867044714,
+        18.090962525457144
+      ],
+      "locationDescription": "Tvärsöver gatan från Coop",
+      "distanceFromQueriedAddress": 55,
+      "lowBoxesAvailable": true,
+      "transports": [
+        {
+          "transport": "driving",
+          "duration": 418,
+          "distance": 2193,
+          "distanceValueIn": "meters",
+          "durationValueIn": "seconds"
+        },
+        {
+          "transport": "walking",
+          "duration": 801,
+          "distance": 973,
+          "distanceValueIn": "meters",
+          "durationValueIn": "seconds"
+        }
+      ]
+    },]
+#
+
+definitions:
+
+  --- bodies ---:
+    type: object
+    
+
+#
+
+  POST_pickup_body:
+    required:
+      - pickup
+      - targetLocations
+    properties:
+      sender:
+        type: object
+        properties:
+          userId:
+            type: string
+      pickup:
+        $ref: '#/definitions/pickup_object'
+      requiresLowBox:
+        type: boolean
+        description: 'The receiver needs a box close to the bottom of the locker'
+      targetLocations:
+        type: array
+        items:
+          type: string
+        description: 'A prioritized list of locations where the pickup should originate from'
+        
+    
+#
+  POST_delivery_body:
+    required: 
+     - senderName
+     - period
+    properties:
+      receiver:
+        $ref: '#/definitions/receiver_object'
+        
+      delivery:
+        $ref: '#/definitions/delivery_object'
+        
+      requiresLowBox:
+        type: boolean
+        description: 'The receiver needs a box close to the bottom of the locker'
+      targetLocations:
+        type: array
+        items:
+          type: string
+        description: 'Provided if a specific location is wanted, prioritized by array index. Can be either locationId or locationNumber'
+
+#
+
+  PATCH_delivery_body:
+    type: object
+    required:
+      - parcelId
+    properties:
+      parcelId:
+        type: string
+        description: Carrier's parcel id
+        example: 'ABC000001'
+      receiver:
+        type: object
+        properties:
+          userId:
+            type: string
+      dimensions:
+        type: array
+        items:
+          type: integer
+        example: [1,1,1]
+      targetLocations:
+        type: array
+        items:
+          type: string
+        description: 'Provided if a specific location is wanted, prioritized by array index. Can be either property locationId or locationNumber'
+        example: ["604f73fd02fc690ae7d7e57f", "000790"]
+      requiresLowBox:
+        type: boolean
+        example: false
+        description: 'The receiver needs a box close to the bottom of the locker'
+
+#
+
+  POST_status_body:
+    type: object
+    required:
+      - parcelId
+      - name
+    properties:
+      userId:
+        type: string
+      parcelId:
+        type: string
+      name:
+        type: string
+        description: 'Status names: on-way, marked-for-return, cancelled'
+        
+#
+
+  --- objects ---:
+    type: object
+    
+#
+
+  receiver_object:
+    type: object
+    properties:
+      userId:
+        type: string
+
+
+#
+  delivery_object:
+    type: object
+    properties:
+      parcelId:
+        type: string
+        description: 'Unique id, same value as displayed with a barcode on the parcel'
+      dimensions:
+        type: array
+        items:
+          type: integer
+        example: [1,1,1]
+    required:
+      - parcelId
+      - dimensions
+      
+      
+#
+
+  pickup_object:
+    type: object
+    properties:
+      parcelId:
+        type: string
+        description: 'Unique id, same value as displayed with a barcode on the parcel'
+      dimensions:
+        type: array
+        items:
+          type: integer
+        example: [1,1,1]
+    required:
+      - parcelId
+      - dimensions
+      
+#
+
+  address_object:
+    type: object
+    required:
+      - street
+      - zip
+      - city
+    properties:
+      street:
+        type: string
+        description: 'Full street with number'
+      zip:
+        type: string
+      city:
+        type: string
+        
+#
+  error_object:
+    type: object
+    properties:
+      message:
+        type: string
+        description: Description of the error
+      errorName: 
+        type: string
+        description: String code of the error
+      errorCode: 
+        type: number
+        description: Number code of the error
+      status: 
+        type: number
+        description: Returned HTTP status code
+#

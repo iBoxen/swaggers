@@ -7,7 +7,7 @@ basePath: /
 schemes:
 - https
 paths:
- /location:
+ /location/{locationId}:
     get:
       summary: Get location images
       description: Example URL /location/60477c10093d2f0008cdf0ce
@@ -21,7 +21,7 @@ paths:
         required: true
 
       - in: path
-        name: location id
+        name: locationId
         type: string
         required: true
 

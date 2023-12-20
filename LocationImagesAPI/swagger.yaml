@@ -27,9 +27,9 @@ paths:
 
       responses:
         401:
-          description: Unauthorized
+          description: Unauthorized OR InvalidAuthorizationToken
         404:
-          description: Invalidlocation
+          description: InvalidLocation
         200:
           description: 'Returns the individual locker images at a location'
           examples: 

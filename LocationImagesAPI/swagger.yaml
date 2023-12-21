@@ -9,7 +9,7 @@ paths:
  /location/{locationId}:
     get:
       summary: Get location images
-      description: Example URL /location/60477c10093d2f0008cdf0ce
+      description: Example URL /location/60477c10093d2f0008cdf0ce <br/><br/> A location image URL is valid for 7 days
       produces:
       - application/json
       parameters:

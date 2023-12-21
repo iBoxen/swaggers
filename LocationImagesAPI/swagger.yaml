@@ -2,8 +2,7 @@ swagger: '2.0'
 info:
   version: 1.0.0
   title: Location Images API
-host: images.iboxen-staging.se
-basePath: /
+  description: staging https://4ydzm9qes6.execute-api.eu-north-1.amazonaws.com/staging <br> production https://vp694vsg72.execute-api.eu-north-1.amazonaws.com/production
 schemes:
 - https
 paths:

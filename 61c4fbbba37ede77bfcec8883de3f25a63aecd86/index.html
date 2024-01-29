@@ -1,21 +1,101 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>iBoxen documentation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 20px;
+            background-color: #333;
+            color: #fff;
+        }
+
+        main {
+            margin-top: 20px;
+        }
+
+        section {
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        a {
+            color: #007BFF;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        footer {
+            text-align: center;
+            padding: 10px;
+            background-color: #333;
+            color: #fff;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
 </head>
 
 <body>
-    <h1>Integrate your parcel deliveries to iBoxen system</h1>
-    Swagger: <a target="_blank" href="./IntegrationBase/">Parcel integration API</a>
-    <br />
-    PDF: <a target="_blank" href="./iBoxen integration, v1.0.pdf">Documentation PDF</a>
-    <br />
-    <br />
-    <h1>Fetch iBoxen location images</h1>
-    Swagger: <a target="_blank" href="./LocationImagesAPI/">Location images API</a>
 
-    <h1>Customer SDK digital keys API</h1>
-    Swagger: <a target="_blank" href="https://sdk.qlocxiboxen.com/docs/">SDK API</a>
+    <header>
+        <h1>iBoxen documentation</h1>
+    </header>
+
+    <main>
+        <section>
+            <h2>Parcel integration</h2>
+            <p>Integrate and book your parcels to the iBoxen system</p>
+            <ul>
+                <li><a target="_blank" href="./IntegrationBase/">Parcel integration API</a></li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Miscellaneous API's</h2>
+            <ul>
+                <li><a target="_blank" href="./LocationImagesAPI/">Location images API</a></li>
+                <li><a target="_blank" href="https://sdk.qlocxiboxen.com/docs/">SDK API for digital key's</a></li>
+            </ul>
+        </section>
+
+        <!-- <section>
+            <h2>Useful Links</h2>
+            <ul>
+                <li><a target="_blank" href="./LocationImagesAPI/">Location images API</a></li>
+                <li><a target="_blank" href="https://sdk.qlocxiboxen.com/docs/">SDK API</a></li>
+            </ul>
+        </section> -->
+    </main>
+
+    <footer>
+        <p></p>
+    </footer>
+
 </body>
 
 </html>

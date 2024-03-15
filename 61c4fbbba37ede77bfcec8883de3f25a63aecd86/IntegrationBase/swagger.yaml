@@ -363,6 +363,54 @@ paths:
     },]
 #
 
+  /locations/changes:
+    get:
+      summary: Get a list of locations
+      parameters:
+        - in: query
+          name: changedDate
+          type: string
+          required: false
+          description: Date in format '2024-03-10'
+        
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        '200':
+          description: ''
+          examples: 
+            application/json: {
+  "ok": true,
+  "status": 200,
+  "data": {
+    "changes": [
+      {
+        "locationNumber": "000819",
+        "activeBoxes": 16,
+        "status": "operational"
+      },
+      {
+        "locationNumber": "000820",
+        "activeBoxes": 0,
+        "status": "discontinued"
+      },
+      {
+        "locationNumber": "001163",
+        "activeBoxes": 27,
+        "status": "operational"
+      },
+      {
+        "locationNumber": "000829",
+        "activeBoxes": 16,
+        "status": "operational"
+      }
+    ],
+    "fromDate": "2024-03-10T00:00:00.000Z"
+  }
+}
+
 definitions:
 
   --- bodies ---:

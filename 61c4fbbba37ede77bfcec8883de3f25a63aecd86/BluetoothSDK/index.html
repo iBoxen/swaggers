@@ -5,7 +5,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Java SDK Documentation</title>
-    <script type="module" src="https://md-block.verou.me/md-block.js"></script>
+    <!-- <script type="module" src="https://md-block.verou.me/md-block.js"></script> -->
+
+    <!-- Lightweight client-side loader that feature-detects and load polyfills only when necessary -->
+    <script src="https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs@2/webcomponents-loader.min.js"></script>
+
+    <!-- Load the element definition -->
+    <script type="module" src="https://cdn.jsdelivr.net/gh/zerodevx/zero-md@1/src/zero-md.min.js"></script>
+
+
     <style>
         /* Body styles */
         body {
@@ -77,40 +85,31 @@
         <h1>Java SDK Documentation</h1>
     </header>
 
-    ### testing md block
-
-    <md-block>
-        # md block 1
-        # md block 2
-
-        ```javascript
-        console.log('Hello, world!');
-        ```
-    </md-block>
 
     <main>
-        <h2>Getting Started</h2>
+        <zero-md src="README.md"></zero-md>
+        <!-- <h2>Getting Started</h2>
         <p>This documentation provides a guide for using the Java SDK for your project. It includes information on
             installation, configuration, and available classes and methods.</p>
-
+            
         <h3>Installation</h3>
         <p>To install the Java SDK, follow these steps:</p>
         <ol>
             <li>Download the JAR file from the project website.</li>
             <li>Add the JAR file to your project's classpath.</li>
         </ol>
-
+        
         <h3>Configuration (Optional)</h3>
         <p>The SDK may require some configuration depending on your specific use case. Refer to the relevant sections in
             this documentation for configuration details.</p>
-
-        <h2>Core Classes</h2>
-        <p>The following sections describe the core classes provided by the SDK.</p>
-        <ul>
-            <li><a href="#class-name">ClassName</a></li>
-            <li><a href="#another-class-name">AnotherClassName</a></li>
-        </ul>
-
+            
+            <h2>Core Classes</h2>
+            <p>The following sections describe the core classes provided by the SDK.</p>
+            <ul>
+                <li><a href="#class-name">ClassName</a></li>
+                <li><a href="#another-class-name">AnotherClassName</a></li>
+            </ul>
+            
         <h3 id="class-name">ClassName</h3>
         <p>The `ClassName` class provides functionalities for... (Describe functionalities).</p>
 
@@ -125,7 +124,7 @@ public class ClassName {
         <pre>
 ClassName myObject = new ClassName();
 myObject.methodName(arguments);
-    </pre>
+    </pre> -->
 
     </main>
 </body>

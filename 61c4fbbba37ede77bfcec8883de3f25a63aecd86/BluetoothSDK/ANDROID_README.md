@@ -1,4 +1,4 @@
-# Bluetooth SDK
+# Android Bluetooth SDK
 The SDK is instantiated requiring `Context`, `BluetoothManager` and `BluetoothAdapter` objects.
 
 The data/keys used to interact with the locker are provided by the client application.
@@ -35,9 +35,7 @@ public class MyJavaClass extends Activity {
 
 
     MyJavaClass(Context context) {
-        super(context);
         ctx = context;
-
     }
 
     public void initSDK() {
@@ -46,9 +44,12 @@ public class MyJavaClass extends Activity {
                 requiredPermissions,
                 REQUEST_CODE_PERMISSIONS);
 
-        BluetoothManager bm = (BluetoothManager) ctx.getSystemService(ctx.BLUETOOTH_SERVICE);
-        BluetoothAdapter ba = bm.getAdapter();
-        ibInterface = new iBoxenInterface(ctx, bm, ba);
+        BluetoothManager mBluetoothManager = (BluetoothManager) ctx.getSystemService(ctx.BLUETOOTH_SERVICE);
+        BluetoothAdapter mBluetoothAdapter = bm.getAdapter();
+
+        String serviceId = "<your service id>";
+
+        ibInterface = new iBoxenInterface(ctx, serviceId, mBluetoothManager, mBluetoothAdapter);
     }
 
     public void getPeripherals() {

@@ -1,6 +1,149 @@
-# test
+# Bluetooth SDK
+The SDK is instantiated requiring `Context`, `BluetoothManager` and `BluetoothAdapter` objects.
+
+The data/keys used to interact with the locker are provided by the client application.
+
+### Example implementation
+```java
+package com.appexampleiboxensdk;
+
+import android.Manifest;
+import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothManager;
+import androidx.core.app.ActivityCompat;
+import android.content.Context;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import com.qlocxiboxen.sdk.iBoxenInterface;
+
+public class MyJavaClass extends Activity {
+    private Context ctx;
+    private iBoxenInterface ibInterface;
+    private static final int REQUEST_CODE_PERMISSIONS = 213;
+
+    private String[] requiredPermissions = new String[] {
+            Manifest.permission.BLUETOOTH,
+            Manifest.permission.BLUETOOTH_SCAN,
+            Manifest.permission.BLUETOOTH_CONNECT,
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.INTERNET
+    };
 
 
-```javascript
-console.log('Hello, world!');
+    MyJavaClass(Context context) {
+        super(context);
+        ctx = context;
+
+    }
+
+    public void initSDK() {
+        ActivityCompat.requestPermissions(
+                getCurrentActivity(),
+                requiredPermissions,
+                REQUEST_CODE_PERMISSIONS);
+
+        BluetoothManager bm = (BluetoothManager) ctx.getSystemService(ctx.BLUETOOTH_SERVICE);
+        BluetoothAdapter ba = bm.getAdapter();
+        ibInterface = new iBoxenInterface(ctx, bm, ba);
+    }
+
+    public void getPeripherals() {
+        ibInterface.getPeripherals(new iBoxenInterface.Callbacks.getPeripheralsCallback() {
+            @Override
+            public void peripheralNames(ArrayList<String> names) { }
+
+            @Override
+            public void error(String error) { }
+        });
+    }
+
+    public void open(String payload) {
+        ibInterface.openLock(payload, new iBoxenInterface.Callbacks.openLockCallback() {
+            @Override
+            public void success() { }
+
+            @Override
+            public void error(String error) { }
+        });
+    }
+
+    public void sense(String payload) {
+        ibInterface.getDoorsOpen(payload, new iBoxenInterface.Callbacks.senseCallback() {
+            @Override
+            public void success(String doorsStatus) { }
+
+            @Override
+            public void error(String error) { }
+        });
+    }
+    
+    public void disconnect() {
+        ibInterface.disconnect(new iBoxenInterface.Callbacks.disconnectCallback() {
+            @Override
+            public void success() { }
+
+            @Override
+            public void error(String error) { }
+        });
+    }
+}
+
 ```
+
+### Example snippets
+
+Check if location services are enabled:
+
+```java
+public Boolean locationServicesEnabled() {
+    LocationManager locationManager = (LocationManager) ctx.getSystemService(Context.LOCATION_SERVICE);
+
+    Boolean enabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+
+    return enabled;
+}
+```
+
+Check if Android Bluetooth is enabled:
+
+```java
+public Boolen bluetoothEnabled() {
+    BluetoothAdapter mBluetoothAdapter;
+    BluetoothManager mBluetoothManager = (BluetoothManager) ctx.getSystemService(ctx.BLUETOOTH_SERVICE);
+
+    mBluetoothAdapter = (BluetoothAdapter) mBluetoothManager.getAdapter();
+
+    return mBluetoothAdapter.isEnabled();
+}
+```
+
+### Permission requirements
+
+Requires the app to have the following permissions in manifest & allowed by user:
+
+```xml
+<!-- To be able to use Bluetooth -->
+<uses-permission android:name="android.permission.BLUETOOTH"/>
+<uses-permission android:name="android.permission.BLUETOOTH_SCAN"/>
+<uses-permission android:name="android.permission.BLUETOOTH_CONNECT"/>
+<uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+
+<!-- To be able to push SDK logs to the server -->
+<uses-permission android:name="android.permission.INTERNET"/>
+
+<!-- To be able to get location information/bluetooth devices -->
+<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+```
+
+### Network requirements
+The SDK pushes its own logs to the iBoxen server, the logs are used to troubleshoot and to improve the SDK.
+Logs server endpoints are:
+
+staging: https://logger.iboxen-staging.se
+
+production: https://logger.qlocxiboxen.com

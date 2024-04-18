@@ -91,6 +91,15 @@
         
         <zero-md src="KEYS_README.md"></zero-md>
     </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/components/prism-java.min.js"></script>
+    <script>
+      // Wait for Zero-md to render content, then apply syntax highlighting
+      document.querySelector('zero-md').addEventListener('load', function() {
+        Prism.highlightAll();
+      });
+    </script>
 </body>
 
 </html>

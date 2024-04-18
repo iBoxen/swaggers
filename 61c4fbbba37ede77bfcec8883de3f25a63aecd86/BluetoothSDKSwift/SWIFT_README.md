@@ -77,7 +77,7 @@ import iBoxenInterfaceSwift
 
 struct ContentView: View {
     @State private var payloads: Payloads?
-    @State private var iBoxenSDK = iBoxenInterface(serviceId: "your-service-id-here")
+    @State private var iBoxenSDK = iBoxenInterface(serviceId: "<your service id>")
     
     var body: some View {
         VStack {

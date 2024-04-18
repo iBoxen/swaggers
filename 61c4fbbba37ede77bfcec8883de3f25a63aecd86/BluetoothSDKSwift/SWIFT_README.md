@@ -25,7 +25,7 @@ isDoorsClosed(_ payload: SensePayload, _ completion: @escaping (Result<Bool, Err
 * Type: `OperationInProgressError` Description: `Scan is already in progress` | `Payload execution already in progress`<br>
 * Type: `TimeoutError` Description: `Operation timed out`<br>
 
-#### List of errors that could be returned from `open`.
+#### List of errors that could be returned from `open` and `isDoorsClosed`.
 * Type: `NoCandidatesError` Description: `Found no candidates`<br>
 Explanation: Happens if a locker was not found nearby.
 * Type: `GenericError` Description: `Generic error`<br>

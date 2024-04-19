@@ -24,6 +24,7 @@ isDoorsClosed(_ payload: SensePayload, _ completion: @escaping (Result<Bool, Err
 * Type: `BluetoothMissingPermission` Description: `Missing bluetooth permission`<br>
 * Type: `OperationInProgressError` Description: `Scan is already in progress` | `Payload execution already in progress`<br>
 * Type: `TimeoutError` Description: `Operation timed out`<br>
+Explanation: Could happen if connection with the locker is lost during active operation.
 
 #### List of errors that could be returned from `open` and `isDoorsClosed`.
 * Type: `NoCandidatesError` Description: `Found no candidates`<br>
@@ -38,23 +39,19 @@ Explanation: Happens if locker could not give a response.
 ```swift
 public struct AccessPayload: Codable {
     public let payload: String
-    public let id: String
     
-    public init(payload: String, id: String) {
+    public init(payload: String) {
         self.payload = payload
-        self.id = id
     }
 }
 
 public struct SensePayload: Codable {
     public let payload: String
     public let doorOpenValue: String?
-    public let id: String
 
-    public init(payload: String, doorOpenValue: String?, id: String) {
+    public init(payload: String, doorOpenValue: String?) {
         self.payload = payload
         self.doorOpenValue = doorOpenValue
-        self.id = id
     }
 }
 

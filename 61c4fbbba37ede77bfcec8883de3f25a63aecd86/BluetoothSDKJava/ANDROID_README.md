@@ -49,7 +49,19 @@ public class MyJavaClass extends Activity {
 
         String serviceId = "<your service id>";
 
-        ibInterface = new iBoxenInterface(ctx, serviceId, mBluetoothManager, mBluetoothAdapter);
+        iBoxenInterface.Environment stage = iBoxenInterface.Environment.staging; // decide which environment to use
+
+        ibInterface = new iBoxenInterface(ctx,
+                serviceId,
+                mBluetoothManager,
+                mBluetoothAdapter,
+                iBoxenInterface.Environment.staging,
+                new iBoxenInterface.Callbacks.iBoxenDeviceEventCallback() {
+                    @Override
+                    public void event(String eventName, String deviceName) {
+                        // handle event
+                    }
+                });
     }
 
     public void getPeripherals() {
@@ -58,7 +70,7 @@ public class MyJavaClass extends Activity {
             public void peripheralNames(ArrayList<String> names) { }
 
             @Override
-            public void error(String error) { }
+            public void error(iBoxenException exception) { }
         });
     }
 
@@ -68,7 +80,7 @@ public class MyJavaClass extends Activity {
             public void success() { }
 
             @Override
-            public void error(String error) { }
+            public void error(iBoxenException exception) { }
         });
     }
 
@@ -78,8 +90,19 @@ public class MyJavaClass extends Activity {
             public void success(String doorsStatus) { }
 
             @Override
-            public void error(String error) { }
+            public void error(iBoxenException exception) { }
         });
+    }
+
+    public void connnect() {
+        ibInterface.connect("9fb1575937e40581f90259e81432e7d22e73fffd0fea41f25ba885242fb5be04",
+                new iBoxenInterface.Callbacks.connectCallback() {
+                    @Override
+                    public void success() { }
+
+                    @Override
+                    public void error(iBoxenException exception) { }
+                });
     }
     
     public void disconnect() {
@@ -88,7 +111,7 @@ public class MyJavaClass extends Activity {
             public void success() { }
 
             @Override
-            public void error(String error) { }
+            public void error(iBoxenException exception) { }
         });
     }
 }

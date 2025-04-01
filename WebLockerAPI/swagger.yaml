@@ -1,0 +1,404 @@
+info:
+  title: iBoxen WebLockerAPI
+  description: Restful endpoints for integrating iBoxen WebLocker
+  version: 1.0.0
+paths:
+  /v1/parcel/{parcelId}/compartment/statuses:
+    get:
+      summary: Retreive open compartments on this parcel's location
+      # description: Retrive sense data from all ports on a location
+      parameters:
+        - name: deviceId
+          schema:
+            type: string
+            required: true
+            description: Name of IoT Device
+          in: path
+        - name: x-consumer
+          schema:
+            type: string
+            required: true
+          in: header
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                - isOpen: true
+                - isOpen: false
+        "503":
+          description: Device offline
+      tags:
+        - Parcel compartment interactions
+      security:
+        - ApiKeyAuth: []
+  /v1/parcel/{parcelId}/compartment/status:
+    get:
+      summary: Retreive open compartment for this particular parcel
+      # description: Retrive sense data from all ports on a device
+      parameters:
+        - name: deviceId
+          schema:
+            type: string
+            required: true
+            description: Name of IoT Device
+          in: path
+        - name: x-consumer
+          schema:
+            type: string
+            required: true
+          in: header
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                - isOpen: true
+                - isOpen: false
+        "503":
+          description: Device offline
+      tags:
+        - Parcel compartment interactions
+      security:
+        - ApiKeyAuth: []
+  # /v1/devices/{deviceId}/ports/{portId}/sense:
+  #   get:
+  #     summary: Retrive sense data from a specific port on a device
+  #     description: Retrive sense data from a specific port on a device
+  #     parameters:
+  #       - name: deviceId
+  #         schema:
+  #           type: string
+  #           required: true
+  #           description: Name of IoT Device
+  #         in: path
+  #       - name: portId
+  #         schema:
+  #           type: number
+  #           required: true
+  #           description: Index of port
+  #         in: path
+  #       - name: x-consumer
+  #         schema:
+  #           type: string
+  #           required: true
+  #         in: header
+  #     responses:
+  #       "200":
+  #         content:
+  #           application/json:
+  #             example:
+  #               isOpen: true
+  #       "503":
+  #         description: Device offline
+  #     tags:
+  #       - Device Ports
+  #     security:
+  #       - ApiKeyAuth: []
+  /v1/parcel/{parcelId}/compartment/open:
+    post:
+      summary: Open compartment
+      description: Open port on device
+      parameters:
+        - name: deviceId
+          schema:
+            type: string
+            required: true
+            description: Name of IoT Device
+          in: path
+        - name: portId
+          schema:
+            type: number
+            required: true
+            description: Index of port
+          in: path
+        - name: openDuration
+          schema:
+            type: number
+          in: query
+        - name: x-consumer
+          schema:
+            type: string
+            required: true
+          in: header
+        - name: data
+          description: request body
+          schema:
+            type: object
+            properties: {}
+          in: body
+      responses:
+        "200": {}
+        "503":
+          description: Device offline
+      tags:
+        - Parcel compartment interactions
+      security:
+        - ApiKeyAuth: []
+
+  /v1/parcel/{parcelId}/compartment/new:
+    post:
+      summary: Request new parcel compartment
+      description: Open port on device
+      parameters:
+        - name: body
+          in: body
+          description: request body
+          required: true
+          schema:
+            type: object
+            properties:
+              parcelId: 
+                type: string
+                description: Parcel ID
+              compartmentType:
+                type: string
+                description: Larger,smaller,another
+      responses:
+        "200": {}
+        "400":
+          description: Parcel ID not found
+        "503":
+          description: Device offline
+      tags:
+        - Parcel compartment interactions
+      security:
+        - ApiKeyAuth: []
+
+  /v1/parcel/{parcelId}/compartment/report:
+    post:
+      summary: Report issue with current parcel compartment, get a new one
+      description: Open port on device
+      parameters:
+        - name: body
+          in: body
+          description: request body
+          required: true
+          schema:
+            type: object
+            properties:
+              parcelId: 
+                type: string
+                description: Parcel ID
+              issueCode:
+                type: string
+                description: CompartmentDidNotOpen, CompartmentDidNotClose, AnotherParcelInCompartment
+      responses:
+        "200": {}
+        "400":
+          description: Parcel ID not found
+        "503":
+          description: Device offline
+      tags:
+        - Parcel compartment interactions
+      security:
+        - ApiKeyAuth: []
+  # /v1/devices/{deviceId}/ports/{portId}/barcode:
+  #   put:
+  #     summary: Write barcode to port on device
+  #     description: Write barcode to port on device
+  #     parameters:
+  #       - name: deviceId
+  #         schema:
+  #           type: string
+  #           required: true
+  #           description: Name of IoT Device
+  #         in: path
+  #       - name: portId
+  #         schema:
+  #           type: number
+  #           required: true
+  #           description: Index of port
+  #         in: path
+  #       - name: x-consumer
+  #         schema:
+  #           type: string
+  #           required: true
+  #         in: header
+  #       - name: data
+  #         description: request body
+  #         schema:
+  #           type: object
+  #           required:
+  #             - value
+  #           properties:
+  #             value:
+  #               type: string
+  #               description: Write barcode for specific port
+  #         in: body
+  #     responses:
+  #       "200": {}
+  #       "503":
+  #         description: Device offline
+  #     tags:
+  #       - Device Ports
+  #     security:
+  #       - ApiKeyAuth: []
+    # get:
+    #   summary: Read barcode from port on device
+    #   description: Read barcode from port on device
+    #   parameters:
+    #     - name: deviceId
+    #       schema:
+    #         type: string
+    #         required: true
+    #         description: Name of IoT Device
+    #       in: path
+    #     - name: portId
+    #       schema:
+    #         type: number
+    #         required: true
+    #         description: Index of port
+    #       in: path
+    #     - name: x-consumer
+    #       schema:
+    #         type: string
+    #         required: true
+    #       in: header
+    #   responses:
+    #     "200": {}
+    #     "503":
+    #       description: Device offline
+    #   tags:
+    #     - Device Ports
+    #   security:
+    #     - ApiKeyAuth: []
+  /v1/locations/{locationId}/health: 
+    get:
+      summary: Check location health, including battery and connectivity
+      # description: Retrieve battery status from device
+      parameters:
+        - name: deviceId
+          schema:
+            type: string
+            required: true
+            description: Name of IoT Device
+          in: path
+        - name: x-consumer
+          schema:
+            type: string
+            required: true
+          in: header
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                status: Charging
+        "503":
+          description: Device offline
+      tags:
+        - Location status
+      security:
+        - ApiKeyAuth: []
+  # /v1/devices/{deviceId}/connectivity:
+  #   get:
+  #     summary: Retrieve radio signal strength from device
+  #     description: Retrieve radio signal strength from device
+  #     parameters:
+  #       - name: deviceId
+  #         schema:
+  #           type: string
+  #           required: true
+  #           description: Name of IoT Device
+  #         in: path
+  #       - name: x-consumer
+  #         schema:
+  #           type: string
+  #           required: true
+  #         in: header
+  #     responses:
+  #       "200":
+  #         content:
+  #           application/json:
+  #             example:
+  #               status: -90
+  #               unit: dBm
+  #       "503":
+  #         description: Device offline
+  #     tags:
+  #       - Device Status
+  #     security:
+  #       - ApiKeyAuth: []
+  # /v1/devices/{deviceId}/voltage:
+  #   get:
+  #     summary: Retrieve voltage from device
+  #     description: Retrieve voltage from device
+  #     parameters:
+  #       - name: deviceId
+  #         schema:
+  #           type: string
+  #           required: true
+  #           description: Name of IoT Device
+  #         in: path
+  #       - name: x-consumer
+  #         schema:
+  #           type: string
+  #           required: true
+  #         in: header
+  #     responses:
+  #       "200":
+  #         content:
+  #           application/json:
+  #             example:
+  #               status: 10
+  #               unit: V
+  #       "503":
+  #         description: Device offline
+  #     tags:
+  #       - Device Status
+  #     security:
+  #       - ApiKeyAuth: []
+  # /v1/devices:
+  #   get:
+  #     summary: Retrieve list of allowed devices
+  #     description: Retrieve list of allowed devices
+  #     parameters:
+  #       - name: x-consumer
+  #         schema:
+  #           type: string
+  #           required: true
+  #         in: header
+  #     responses:
+  #       "200":
+  #         content:
+  #           application/json:
+  #             example:
+  #               - deviceId: Q3IoT-mock
+  #       "503":
+  #         description: Device offline
+  #     tags:
+  #       - Devices
+  #     security:
+  #       - ApiKeyAuth: []
+  /health:
+    get:
+      summary: Health check for this API
+      description: ""
+      parameters: []
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                status: healthy
+      tags:
+        - Health
+      security:
+        - ApiKeyAuth: []
+responses: {}
+definitions: {}
+tags: []
+swagger: null
+securityDefinitions:
+  ApiKeyAuth:
+    type: apiKey
+    in: header
+    name: Authorization
+openapi: 3.0.1
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: Authorization

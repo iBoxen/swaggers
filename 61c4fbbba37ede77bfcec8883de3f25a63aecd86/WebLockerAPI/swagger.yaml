@@ -328,13 +328,15 @@ paths:
                 description: Hardware deviation
                 examples:
                   DoorDidNotOpen:
-                    type: DoorDidNotOpen
-                    timestamp: 2025-04-01T09:00:00.000Z
-                    message: Door did not open
+                    value:
+                      type: DoorDidNotOpen
+                      timestamp: 2025-04-01T09:00:00.000Z
+                      message: Door did not open
                   DoorDidNotClose:
-                    type: DoorDidNotClose
-                    timestamp: 2025-04-01T09:01:00.000Z
-                    message: Door did not close
+                    value:
+                      type: DoorDidNotClose
+                      timestamp: 2025-04-01T09:01:00.000Z
+                      message: Door did not close
               user:
                 type: string
                 description: User ID (optional)
@@ -373,13 +375,15 @@ paths:
                 description: Allocation deviation
                 examples:
                   OtherParcelInLocker:
-                    type: OtherParcelInLocker
-                    timestamp: 2025-04-01T09:00:00.000Z
-                    message: Other parcel in locker
+                    values:
+                      type: OtherParcelInLocker
+                      timestamp: 2025-04-01T09:00:00.000Z
+                      message: Other parcel in locker
                   ParcelTooLarge:
-                    type: ParcelTooLarge
-                    timestamp: 2025-04-01T09:01:00.000Z
-                    message: Parcel too large
+                    values:
+                      type: ParcelTooLarge
+                      timestamp: 2025-04-01T09:01:00.000Z
+                      message: Parcel too large
               user:
                 type: string
                 description: User ID (optional)

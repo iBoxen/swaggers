@@ -107,10 +107,20 @@ paths:
                   locker:
                     type: string
               example:
-                - parcelId: string
-                  status: string
-                  boxId: string
-                  locker: string
+                parcelId: string
+                status: string
+                boxId: string
+                locker: string
+        "400":
+          description: Invalid request
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: Not found
+        "500":
+          description: Internal server error
         "503":
           description: Device offline
       tags:
@@ -141,8 +151,35 @@ paths:
               coordinates:
                 type: string
                 description: Latitude,Longitude (optional)
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  openLockers:
+                    type: array
+                    items:
+                      type: number
+              example:
+                openLockers: [1,2,3]
+          description: Open lockers
+        "400":
+          description: Invalid request
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: Not found
+        "500":
+          description: Internal server error
+        "503":
+          description: Device offline
       tags:
         - Driver / Consumer -endpoints
+      
 
 
   /v1/user/compartment/open:
@@ -168,6 +205,21 @@ paths:
               coordinates:
                 type: string
                 description: Latitude,Longitude (optional)
+      responses:
+        "204":
+          description: Locker opened
+        "400":
+          description: Invalid request
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: Not found
+        "500":
+          description: Internal server error
+        "503":
+          description: Device offline
       tags:
         - Driver / Consumer -endpoints
 
@@ -191,6 +243,19 @@ paths:
               user:
                 type: string
                 description: User ID (optional)
+      responses:
+        "204":
+          description: Parcel status updated
+        "400":
+          description: Invalid request
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: Not found
+        "500":
+          description: Internal server error
       tags:
         - Driver / Consumer -endpoints
 
@@ -214,6 +279,30 @@ paths:
               user:
                 type: string
                 description: User ID (optional)
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  compartment:
+                    type: string
+              example:
+                compartment: string
+          description: Compartment changed
+        "400":
+          description: Invalid request
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: No available compartment
+        "500":
+          description: Internal server error
+        "503":
+          description: Device offline
       tags:
         - Driver / Consumer -endpoints
 
@@ -238,6 +327,19 @@ paths:
               user:
                 type: string
                 description: User ID (optional)
+      responses:
+        "204":
+          description: Report received
+        "400":
+          description: Invalid request
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: Location not found
+        "500":
+          description: Internal server error
       tags:
         - Driver / Consumer -endpoints
   /v1/user/report-allocation:
@@ -260,6 +362,19 @@ paths:
               user:
                 type: string
                 description: User ID (optional)
+      responses:
+        "204":
+          description: Report received
+        "400":
+          description: Invalid request
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: Parcel not found
+        "500":
+          description: Internal server error
       tags:
         - Driver / Consumer -endpoints
 
@@ -284,6 +399,19 @@ paths:
               user:
                 type: string
                 description: User ID (optional)
+      responses:
+        "204":
+          description: Report received
+        "400":
+          description: Invalid request
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: Location not found
+        "500":
+          description: Internal server error
       tags:
         - Driver / Consumer -endpoints
 

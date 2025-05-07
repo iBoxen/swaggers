@@ -26,9 +26,46 @@ paths:
         "200":
           content:
             application/json:
+              schema:
+                type: object
+                properties:
+                  parcels:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        parcelId:
+                          type: string
+                        status:
+                          type: string
+                        boxId:
+                          type: string
+                        locker:
+                          type: string
+                  pickups:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        parcelId:
+                          type: string
+                        status:
+                          type: string
+                        boxId:
+                          type: string
+                        locker:
+                          type: string
               example:
-                - isOpen: true
-                - isOpen: false
+                parcels:
+                  - parcelId: string
+                    status: string
+                    boxId: string
+                    locker: string
+                pickups:
+                  - parcelId: string
+                    status: string
+                    boxId: string
+                    locker: string
         "503":
           description: Device offline
       tags:
@@ -58,9 +95,22 @@ paths:
         "200":
           content:
             application/json:
+              schema:
+                type: object
+                properties:
+                  parcelId:
+                    type: string
+                  status:
+                    type: string
+                  boxId:
+                    type: string
+                  locker:
+                    type: string
               example:
-                - isOpen: true
-                - isOpen: false
+                - parcelId: string
+                  status: string
+                  boxId: string
+                  locker: string
         "503":
           description: Device offline
       tags:
@@ -237,6 +287,36 @@ paths:
       tags:
         - Driver / Consumer -endpoints
 
+  /v1/user/latest-parcel:
+    get:
+      summary: getLatestParcel(locationId | coordinates, user?)
+      parameters:
+        - name: locationId
+          in: query
+          type: string
+          required: true
+          description: Location ID registered with iBoxen
+        - name: coordinates
+          in: query
+          type: string
+          required: true
+          description: Latitude,Longitude
+        - name: user
+          in: query
+          type: string
+          # required: true
+          description: User ID
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                - isOpen: true
+                - isOpen: false
+        "503":
+          description: Device offline
+      tags:
+        - Driver -endpoints
   /health:
     get:
       summary: Health check for this API

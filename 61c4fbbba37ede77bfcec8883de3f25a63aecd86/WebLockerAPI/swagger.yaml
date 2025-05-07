@@ -2,60 +2,7 @@ info:
   title: iBoxen WebLockerAPI
   description: Restful endpoints for integrating iBoxen WebLocker
   version: 1.0.0
-components:
-  schemas:
 
-    # -------- individual variants --------
-    DoorDidNotOpen:
-      type: object
-      required: [type, timestamp]          
-      properties:
-        type:         { type: string, enum: [DoorDidNotOpen] }
-        timestamp:    { type: string, format: date-time }
-        message:      { type: string }
-
-    DoorDidNotClose:
-      type: object
-      required: [type, timestamp]          
-      properties:
-        type:         { type: string, enum: [DoorDidNotClose] }
-        timestamp:    { type: string, format: date-time }
-        message:      { type: string }
-
-    OtherParcelInLocker:
-      type: object
-      required: [type, timestamp, message]
-      properties:
-        type:         { type: string, enum: [OtherParcelInLocker] }
-        timestamp:    { type: string, format: date-time }
-        message:      { type: string }
-
-    ParcelTooLarge:
-      type: object
-      required: [type, timestamp]
-      properties:
-        type:         { type: string, enum: [ParcelTooLarge] }
-        timestamp:    { type: string, format: date-time }
-        message:      { type: string }
-
-    HardwareDeviation:                               
-      oneOf:
-        - $ref: '#/components/schemas/DoorDidNotOpen'
-        - $ref: '#/components/schemas/DoorDidNotClose'
-      discriminator:                            # ✓ OpenAPI-3.0 feature
-        propertyName: type
-        mapping:
-          DoorDidNotOpen:      '#/components/schemas/DoorDidNotOpen'
-          DoorDidNotClose:     '#/components/schemas/DoorDidNotClose'
-
-    AllocationDeviation:
-      oneOf:
-        - $ref: '#/components/schemas/OtherParcelInLocker'
-        - $ref: '#/components/schemas/ParcelTooLarge'
-      discriminator:                            # ✓ OpenAPI-3.0 feature
-        propertyName: type
-        mapping:
-          OtherParcelInLocker: '#/components/schemas/OtherParcelInLocker'
 paths:
   /v1/user/missions:
     get:
@@ -554,3 +501,56 @@ components:
       type: apiKey
       in: header
       name: Authorization
+  schemas:
+
+    # -------- individual variants --------
+    DoorDidNotOpen:
+      type: object
+      required: [type, timestamp]          
+      properties:
+        type:         { type: string, enum: [DoorDidNotOpen] }
+        timestamp:    { type: string, format: date-time }
+        message:      { type: string }
+
+    DoorDidNotClose:
+      type: object
+      required: [type, timestamp]          
+      properties:
+        type:         { type: string, enum: [DoorDidNotClose] }
+        timestamp:    { type: string, format: date-time }
+        message:      { type: string }
+
+    OtherParcelInLocker:
+      type: object
+      required: [type, timestamp, message]
+      properties:
+        type:         { type: string, enum: [OtherParcelInLocker] }
+        timestamp:    { type: string, format: date-time }
+        message:      { type: string }
+
+    ParcelTooLarge:
+      type: object
+      required: [type, timestamp]
+      properties:
+        type:         { type: string, enum: [ParcelTooLarge] }
+        timestamp:    { type: string, format: date-time }
+        message:      { type: string }
+
+    HardwareDeviation:                               
+      oneOf:
+        - $ref: '#/components/schemas/DoorDidNotOpen'
+        - $ref: '#/components/schemas/DoorDidNotClose'
+      discriminator:                            # ✓ OpenAPI-3.0 feature
+        propertyName: type
+        mapping:
+          DoorDidNotOpen:      '#/components/schemas/DoorDidNotOpen'
+          DoorDidNotClose:     '#/components/schemas/DoorDidNotClose'
+
+    AllocationDeviation:
+      oneOf:
+        - $ref: '#/components/schemas/OtherParcelInLocker'
+        - $ref: '#/components/schemas/ParcelTooLarge'
+      discriminator:                            # ✓ OpenAPI-3.0 feature
+        propertyName: type
+        mapping:
+          OtherParcelInLocker: '#/components/schemas/OtherParcelInLocker'

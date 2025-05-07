@@ -375,12 +375,12 @@ paths:
                 description: Allocation deviation
                 examples:
                   OtherParcelInLocker:
-                    values:
+                    value:
                       type: OtherParcelInLocker
                       timestamp: 2025-04-01T09:00:00.000Z
                       message: Other parcel in locker
                   ParcelTooLarge:
-                    values:
+                    value:
                       type: ParcelTooLarge
                       timestamp: 2025-04-01T09:01:00.000Z
                       message: Parcel too large

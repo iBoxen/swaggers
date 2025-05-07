@@ -134,24 +134,24 @@ paths:
       summary: senseParcelCompartment(parcelId, locationId | coordinates, user?)
       parameters:
         - name: body
-          in: body
-          description: request body
-          required: true
-          schema:
-            type: object
-            properties:
-              parcelId:
-                type: string
-                description: Parcel ID registered with iBoxen
-              user:
-                type: string
-                description: User ID (optional)
-              locationId:
-                type: string
-                description: Location ID (optional)
-              coordinates:
-                type: string
-                description: Latitude,Longitude (optional)
+          requestBody:
+            description: request body
+            required: true
+            schema:
+              type: object
+              properties:
+                parcelId:
+                  type: string
+                  description: Parcel ID registered with iBoxen
+                user:
+                  type: string
+                  description: User ID (optional)
+                locationId:
+                  type: string
+                  description: Location ID (optional)
+                coordinates:
+                  type: string
+                  description: Latitude,Longitude (optional)
       responses:
         "200":
           content:
@@ -317,7 +317,28 @@ paths:
           description: request body
           required: true
           schema:
-            $ref: '#/components/schemas/HardwareDeviation'    
+            type: object
+            properties:
+              parcelId:
+                type: string
+                description: Parcel ID registered with iBoxen
+                example: parcel-001
+              deviation:
+                $ref: '#/components/schemas/HardwareDeviation'
+                description: Hardware deviation
+                examples:
+                  DoorDidNotOpen:
+                    type: DoorDidNotOpen
+                    timestamp: 2025-04-01T09:00:00.000Z
+                    message: Door did not open
+                  DoorDidNotClose:
+                    type: DoorDidNotClose
+                    timestamp: 2025-04-01T09:01:00.000Z
+                    message: Door did not close
+              user:
+                type: string
+                description: User ID (optional)
+              
       responses:
         "204":
           description: Report received
@@ -485,15 +506,7 @@ paths:
         - Health
       security:
         - ApiKeyAuth: []
-responses: {}
-definitions: {}
 tags: []
-swagger: null
-securityDefinitions:
-  ApiKeyAuth:
-    type: apiKey
-    in: header
-    name: Authorization
 openapi: 3.0.1
 components:
   securitySchemes:

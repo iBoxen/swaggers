@@ -310,7 +310,7 @@ paths:
 
   /v1/user/report-hardware:
     post:
-      summary: raportHardware(parcelId, status, user?)
+      summary: reportHardware(parcelId, status, user?)
       parameters:
         - name: body
           in: body
@@ -368,9 +368,18 @@ paths:
               parcelId:
                 type: string
                 description: Parcel ID registered with iBoxen
-              status:
-                type: string
-                description: Status of the parcel (e.g., "delivered", "picked up")
+              deviation:
+                $ref: '#/components/schemas/AllocationDeviation'
+                description: Allocation deviation
+                examples:
+                  OtherParcelInLocker:
+                    type: OtherParcelInLocker
+                    timestamp: 2025-04-01T09:00:00.000Z
+                    message: Other parcel in locker
+                  ParcelTooLarge:
+                    type: ParcelTooLarge
+                    timestamp: 2025-04-01T09:01:00.000Z
+                    message: Parcel too large
               user:
                 type: string
                 description: User ID (optional)

@@ -57,15 +57,15 @@ paths:
                           type: string
               example:
                 parcels:
-                  - parcelId: string
-                    status: string
-                    boxId: string
-                    locker: string
+                  - parcelId: parcel-001
+                    status: in-box
+                    boxId: 6800e90ac1a98cc125bb79c6
+                    locker: 13
                 pickups:
-                  - parcelId: string
-                    status: string
-                    boxId: string
-                    locker: string
+                  - parcelId: pickup-001
+                    status: picked-up
+                    boxId: 6800e90ac1a98cc125bb79c7
+                    locker: 14
         "503":
           description: Device offline
       tags:
@@ -107,10 +107,10 @@ paths:
                   locker:
                     type: string
               example:
-                parcelId: string
-                status: string
-                boxId: string
-                locker: string
+                parcelId: parcel-001
+                status: on-way
+                boxId: 6800e90ac1a98cc125bb79c6
+                locker: 13
         "400":
           description: Invalid request
         "401":
@@ -454,17 +454,17 @@ paths:
                         timestamp: string
                         message: string
               example:
-                parcelId: string
-                status: string
-                boxId: string
-                locker: string
+                parcelId: parcel-001
+                status: on-way
+                boxId: 6800e90ac1a98cc125bb79c6
+                locker: 13
                 logs: 
-                  - type: string
-                    timestamp: string
-                    message: string
-                  - type: string
-                    timestamp: string
-                    message: string
+                  - type: info
+                    timestamp: 2025-04-01T09:00:00.000Z
+                    message: Parcel scanned by driver ( driver-001 )
+                  - type: error
+                    timestamp: 2025-04-01T09:01:00.000Z
+                    message: Parcel scanned in the wrong location. Scanned in location-001, allocated to location-002
         "400":
           description: Invalid request
         "401":

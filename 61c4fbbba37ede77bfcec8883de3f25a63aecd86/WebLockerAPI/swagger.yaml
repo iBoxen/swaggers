@@ -70,7 +70,7 @@ paths:
         "503":
           description: Device offline
       tags:
-        - Driver / Consumer -endpoints
+        - Driver & Consumer -endpoints
       security:
         - ApiKeyAuth: []
   /v1/user/parcel:
@@ -125,7 +125,7 @@ paths:
         "503":
           description: Device offline
       tags:
-        - Driver / Consumer -endpoints
+        - Driver & Consumer -endpoints
       security:
         - ApiKeyAuth: []
 
@@ -179,7 +179,7 @@ paths:
         "503":
           description: Device offline
       tags:
-        - Driver / Consumer -endpoints
+        - Driver & Consumer -endpoints
       
 
 
@@ -222,7 +222,7 @@ paths:
         "503":
           description: Device offline
       tags:
-        - Driver / Consumer -endpoints
+        - Driver & Consumer -endpoints
 
   /v1/user/parcel/status:
     post:
@@ -258,7 +258,7 @@ paths:
         "500":
           description: Internal server error
       tags:
-        - Driver / Consumer -endpoints
+        - Driver & Consumer -endpoints
 
   /v1/user/compartment/change:
     post:
@@ -305,7 +305,7 @@ paths:
         "503":
           description: Device offline
       tags:
-        - Driver / Consumer -endpoints
+        - Driver & Consumer -endpoints
 
 
   /v1/user/report-hardware:
@@ -344,16 +344,17 @@ paths:
                   type: string
                   description: User ID (optional)   
       responses:
-        "204":
+        '204':
           description: Report received
         '400': { description: Invalid request }
         '401': { description: Unauthorized }
         '403': { description: Forbidden }
-        '404': { description: Location not found }
+        '404': { description: Parcel not found }
         '500': { description: Internal server error }
-        tags:
-        - Driver / Consumer -endpoints
-        security:
+
+      tags:
+        - Driver & Consumer -endpoints
+      security:
           - ApiKeyAuth: []
         
   /v1/user/report-allocation:
@@ -412,11 +413,9 @@ paths:
         '500': { description: Internal server error }
 
       tags:
-        - Driver / Consumer -endpoints
+        - Driver & Consumer -endpoints
       security:
         - ApiKeyAuth: []
-
-        - Driver / Consumer -endpoints
 
 
   /v1/user/location/report:
@@ -453,7 +452,7 @@ paths:
         "500":
           description: Internal server error
       tags:
-        - Driver / Consumer -endpoints
+        - Driver & Consumer -endpoints
 
   /v1/user/latest-parcel:
     get:

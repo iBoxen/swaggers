@@ -431,7 +431,6 @@ paths:
                     timestamp: "2025-04-01T09:01:00Z"
                     message: Parcel too large
                   user: driver-456
-
       responses:
         '204':
           description: Report received
@@ -444,10 +443,6 @@ paths:
       tags: [Driver / Consumer -endpoints]
       security:
         - ApiKeyAuth: []
-
-        - Driver / Consumer -endpoints
-
-
 
   /v1/user/location/report:
     post:

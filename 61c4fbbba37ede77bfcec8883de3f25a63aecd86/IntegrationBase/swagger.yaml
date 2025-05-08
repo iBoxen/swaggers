@@ -459,8 +459,6 @@ paths:
         '500':
           description: Unexpected server error
 
-      tags:
-        - Driver / Consumer -endpoints
       security:
         - ApiKeyAuth: []
 

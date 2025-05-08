@@ -412,10 +412,11 @@ paths:
 }
   /parcel/{parcelId}/retention:
     post:
-      summary: Add a retention entry for the parcel
+      summary: Modify retention time for parcel
       description: >
-        Pushes a timestamped retention update into **`parcel.retentionUpdates`**
-        and returns the new cumulative retention time.
+        Pushes a new retention time to the database. The new retention time is
+        calculated by adding the retention increment to the current retention.
+        Retention updates stack additively.
       parameters:
         - in: path
           name: parcelId

@@ -1,144 +1,147 @@
 info:
-  title: iBoxen WebLockerAPI
-  description: Restful endpoints for integrating iBoxen WebLocker
+  title: iBoxen WebcompartmentAPI
+  description: Restful endpoints for integrating iBoxen Webcompartment
   version: 1.0.0
 
 paths:
   /v1/user/missions:
     get:
-      summary: getMissions(locationId | coordinates, user?) 
+      summary: getMissions (locationId | coordinates, user?)
       parameters:
         - name: locationId
           in: query
-          type: string
-          # required: true
           description: Location ID registered with iBoxen
+          schema:               # ← “type” now lives under schema
+            type: string
+
         - name: coordinates
           in: query
-          type: string
-          # required: true
           description: Latitude,Longitude
+          schema:
+            type: string
+
         - name: user
           in: query
-          type: string
-          # required: true
           description: User ID
+          schema:
+            type: string
+
       responses:
-        "200":
+        '200':
+          description: List of delivery‐ and pickup-missions
           content:
             application/json:
-              schema:
+              schema:          # identical shape, just valid OAS-3
                 type: object
                 properties:
                   parcels:
                     type: array
                     items:
                       type: object
+                      required: [parcelId, status, compartment]
                       properties:
-                        parcelId:
-                          type: string
-                        status:
-                          type: string
-                        boxId:
-                          type: string
-                        locker:
-                          type: string
+                        parcelId: { type: string }
+                        status:   { type: string }
+                        compartment:   { type: string }
+
                   pickups:
                     type: array
                     items:
                       type: object
+                      required: [parcelId, status, compartment]
                       properties:
-                        parcelId:
-                          type: string
-                        status:
-                          type: string
-                        boxId:
-                          type: string
-                        locker:
-                          type: string
-              example:
-                parcels:
-                  - parcelId: parcel-001
-                    status: in-box
-                    boxId: 6800e90ac1a98cc125bb79c6
-                    locker: 13
-                pickups:
-                  - parcelId: pickup-001
-                    status: picked-up
-                    boxId: 6800e90ac1a98cc125bb79c7
-                    locker: 14
-        "503":
+                        parcelId: { type: string }
+                        status:   { type: string }
+                        compartment:   { type: string }
+
+              examples:        # ← wrapped in “examples” → “value”
+                default:
+                  value:
+                    parcels:
+                      - parcelId: parcel-001
+                        status:   in-box
+                        compartment:   '13'
+                    pickups:
+                      - parcelId: pickup-001
+                        status:   picked-up
+                        compartment:   '14'
+
+        '503':
           description: Device offline
-      tags:
-        - Driver & Consumer -endpoints
+
+      tags: [Driver / Consumer -endpoints]
       security:
         - ApiKeyAuth: []
+
   /v1/user/parcel:
     get:
-      summary: getParcel(parcelId, locationId | coordinates, user?)
+      summary: getParcel (parcelId, locationId | coordinates, user?)
       parameters:
         - name: parcelId
           in: query
-          type: string
           required: true
           description: Parcel ID registered with iBoxen
+          schema:
+            type: string
+
         - name: coordinates
           in: query
-          type: string
-          required: true
+          required: true          # ← still “true”, even though you’ll enforce XOR in code
           description: Latitude,Longitude
+          schema:
+            type: string
+
         - name: user
           in: query
-          type: string
-          # required: true
           description: User ID
+          schema:
+            type: string
+
       responses:
-        "200":
+        '200':
+          description: Parcel information
           content:
             application/json:
               schema:
                 type: object
+                required: [parcelId, status, compartment]
                 properties:
-                  parcelId:
-                    type: string
-                  status:
-                    type: string
-                  boxId:
-                    type: string
-                  locker:
-                    type: string
-              example:
-                parcelId: parcel-001
-                status: on-way
-                boxId: 6800e90ac1a98cc125bb79c6
-                locker: 13
-        "400":
-          description: Invalid request
-        "401":
-          description: Unauthorized
-        "403":
-          description: Forbidden
-        "404":
-          description: Not found
-        "500":
-          description: Internal server error
-        "503":
-          description: Device offline
-      tags:
-        - Driver & Consumer -endpoints
+                  parcelId: { type: string }
+                  status:   { type: string }
+                  compartment:   { type: string }
+
+              examples:
+                default:
+                  value:
+                    parcelId: parcel-001
+                    status:   on-way
+                    compartment:   '13'
+
+        '400': { description: Invalid request }
+        '401': { description: Unauthorized }
+        '403': { description: Forbidden }
+        '404': { description: Not found }
+        '500': { description: Internal server error }
+        '503': { description: Device offline }
+
+      tags: [Driver / Consumer -endpoints]
       security:
         - ApiKeyAuth: []
 
+
   /v1/user/compartment/sense:
     get:
-      summary: senseParcelCompartment(parcelId, locationId | coordinates, user?)
-      parameters:
-        - name: body
-          requestBody:
-            description: request body
-            required: true
+      summary: senseParcelCompartment (parcelId, locationId | coordinates, user?)
+      description: Return a list of compartment numbers that are currently open.
+
+      requestBody:                       # ← replaces the old “parameters: - name: body”
+        required: true
+        description: request body
+        content:
+          application/json:
             schema:
               type: object
+              required: [parcelId]       # adjust if others become mandatory
               properties:
                 parcelId:
                   type: string
@@ -152,136 +155,161 @@ paths:
                 coordinates:
                   type: string
                   description: Latitude,Longitude (optional)
+            examples:
+              default:
+                value:
+                  parcelId: parcel-001
+                  user: driver-123
+                  locationId: loc-456
+                  coordinates: "59.334,18.065"
+
       responses:
-        "200":
+        '200':
+          description: Open compartments
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  openLockers:
+                  opencompartments:
                     type: array
-                    items:
-                      type: number
-              example:
-                openLockers: [1,2,3]
-          description: Open lockers
-        "400":
-          description: Invalid request
-        "401":
-          description: Unauthorized
-        "403":
-          description: Forbidden
-        "404":
-          description: Not found
-        "500":
-          description: Internal server error
-        "503":
-          description: Device offline
-      tags:
-        - Driver & Consumer -endpoints
-      
+                    items: { type: integer }
+              examples:
+                default:
+                  value: { opencompartments: [1, 2, 3] }
 
+        '400': { description: Invalid request }
+        '401': { description: Unauthorized }
+        '403': { description: Forbidden }
+        '404': { description: Not found }
+        '500': { description: Internal server error }
+        '503': { description: Device offline }
+
+      tags: [Driver / Consumer -endpoints]
+      security:
+        - ApiKeyAuth: []
 
   /v1/user/compartment/open:
     post:
-      summary: openParcelCompartment(parcelId, locationId | coordinates, user?)
-      parameters:
-        - name: body
-          in: body
-          description: request body
-          required: true
-          schema:
-            type: object
-            properties:
-              parcelId:
-                type: string
-                description: Parcel ID registered with iBoxen
-              user:
-                type: string
-                description: User ID (optional)
-              locationId:
-                type: string
-                description: Location ID (optional)
-              coordinates:
-                type: string
-                description: Latitude,Longitude (optional)
+      summary: openParcelCompartment (parcelId, locationId | coordinates, user?)
+
+      requestBody:                    # ← replaces the old  parameters: - in: body
+        required: true
+        description: request body
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [parcelId]     # add others if they must be present
+              properties:
+                parcelId:
+                  type: string
+                  description: Parcel ID registered with iBoxen
+                user:
+                  type: string
+                  description: User ID (optional)
+                locationId:
+                  type: string
+                  description: Location ID (optional)
+                coordinates:
+                  type: string
+                  description: Latitude,Longitude (optional)
+            examples:
+              default:
+                value:
+                  parcelId: parcel-001
+                  user: driver-123
+                  locationId: loc-456
+                  coordinates: "59.334,18.065"
+
       responses:
-        "204":
-          description: Locker opened
-        "400":
-          description: Invalid request
-        "401":
-          description: Unauthorized
-        "403":
-          description: Forbidden
-        "404":
-          description: Not found
-        "500":
-          description: Internal server error
-        "503":
-          description: Device offline
-      tags:
-        - Driver & Consumer -endpoints
+        '204': { description: compartment opened }
+        '400': { description: Invalid request }
+        '401': { description: Unauthorized }
+        '403': { description: Forbidden }
+        '404': { description: Not found }
+        '500': { description: Internal server error }
+        '503': { description: Device offline }
+
+      tags: [Driver / Consumer -endpoints]
+      security:
+        - ApiKeyAuth: []
 
   /v1/user/parcel/status:
     post:
-      summary: setParcelStatus(parcelId, status, user?)
-      parameters:
-        - name: body
-          in: body
-          description: request body
-          required: true
-          schema:
-            type: object
-            properties:
-              parcelId:
-                type: string
-                description: Parcel ID registered with iBoxen
-              status:
-                type: string
-                description: Status of the parcel (e.g., "delivered", "picked up")
-              user:
-                type: string
-                description: User ID (optional)
+      summary: setParcelStatus (parcelId, status, user?)
+
+      requestBody:                      # ← replaces parameters: - in: body
+        required: true
+        description: request body
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [parcelId, status]   # add user if it must be present
+              properties:
+                parcelId:
+                  type: string
+                  description: Parcel ID registered with iBoxen
+                status:
+                  type: string
+                  description: Status of the parcel (e.g. "delivered", "picked up")
+                user:
+                  type: string
+                  description: User ID (optional)
+            examples:
+              default:
+                value:
+                  parcelId: parcel-001
+                  status:  delivered
+                  user:    driver-123
+
       responses:
-        "204":
-          description: Parcel status updated
-        "400":
-          description: Invalid request
-        "401":
-          description: Unauthorized
-        "403":
-          description: Forbidden
-        "404":
-          description: Not found
-        "500":
-          description: Internal server error
-      tags:
-        - Driver & Consumer -endpoints
+        '204': { description: Parcel status updated }
+        '400': { description: Invalid request }
+        '401': { description: Unauthorized }
+        '403': { description: Forbidden }
+        '404': { description: Not found }
+        '500': { description: Internal server error }
+
+      tags: [Driver / Consumer -endpoints]
+      security:
+        - ApiKeyAuth: []
+
 
   /v1/user/compartment/change:
     post:
-      summary: changeCompartment(parcelId, size?; larger | smaller | same, user?)
-      parameters:
-        - name: body
-          in: body
-          description: request body
-          required: true
-          schema:
-            type: object
-            properties:
-              parcelId:
-                type: string
-                description: Parcel ID registered with iBoxen
-              size:
-                type: string
-                description: Size of the compartment (e.g., "larger", "smaller", "same")
-              user:
-                type: string
-                description: User ID (optional)
+      summary: changeCompartment (parcelId, size? → larger | smaller | same, user?)
+
+      requestBody:                       # ← replaces parameters: - in: body
+        required: true
+        description: request body
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [parcelId]       # add size if it’s mandatory
+              properties:
+                parcelId:
+                  type: string
+                  description: Parcel ID registered with iBoxen
+                size:
+                  type: string
+                  enum: [larger, smaller, same]
+                  description: Size of the compartment (e.g. "larger", "smaller", "same")
+                user:
+                  type: string
+                  description: User ID (optional)
+            examples:
+              default:
+                value:
+                  parcelId: parcel-001
+                  size: larger
+                  user:  driver-123
+
       responses:
-        "200":
+        '200':
+          description: Compartment changed
           content:
             application/json:
               schema:
@@ -289,23 +317,20 @@ paths:
                 properties:
                   compartment:
                     type: string
-              example:
-                compartment: string
-          description: Compartment changed
-        "400":
-          description: Invalid request
-        "401":
-          description: Unauthorized
-        "403":
-          description: Forbidden
-        "404":
-          description: No available compartment
-        "500":
-          description: Internal server error
-        "503":
-          description: Device offline
-      tags:
-        - Driver & Consumer -endpoints
+              examples:
+                default:
+                  value: { compartment: A-12 }
+        '400': { description: Invalid request }
+        '401': { description: Unauthorized }
+        '403': { description: Forbidden }
+        '404': { description: No available compartment }
+        '500': { description: Internal server error }
+        '503': { description: Device offline }
+
+      tags: [Driver / Consumer -endpoints]
+      security:
+        - ApiKeyAuth: []
+
 
 
   /v1/user/report-hardware:
@@ -351,18 +376,16 @@ paths:
         '403': { description: Forbidden }
         '404': { description: Parcel not found }
         '500': { description: Internal server error }
-
-      tags:
-        - Driver & Consumer -endpoints
+      tags: [Driver / Consumer -endpoints]
       security:
-          - ApiKeyAuth: []
+        - ApiKeyAuth: []
         
   /v1/user/report-allocation:
     post:
       summary: reportAllocation(parcelId, deviation, user?)
       description: >
         Report an deviation that occurred while trying to put a parcel
-        in a locker - e.g. the locker already contains another parcel or the
+        in a compartment - e.g. the compartment already contains another parcel or the
         parcel is too large.
       requestBody:                                   # ← replaces the old `in: body`
         required: true
@@ -384,17 +407,17 @@ paths:
                   type: string
                   description: User ID (optional)
             examples:                                 # ← multiple named samples
-              OtherParcelInLocker:
-                summary: Another parcel was already in the locker
+              OtherParcelIncompartment:
+                summary: Another parcel was already in the compartment
                 value:
                   parcelId: parcel-001
                   deviation:
-                    type: OtherParcelInLocker
+                    type: OtherParcelIncompartment
                     timestamp: "2025-04-01T09:00:00Z"
-                    message: Other parcel in locker
+                    message: Other parcel in compartment
                   user: driver-123
               ParcelTooLarge:
-                summary: Parcel does not fit in the allocated locker
+                summary: Parcel does not fit in the allocated compartment
                 value:
                   parcelId: parcel-002
                   deviation:
@@ -402,7 +425,6 @@ paths:
                     timestamp: "2025-04-01T09:01:00Z"
                     message: Parcel too large
                   user: driver-456
-
       responses:
         '204':
           description: Report received
@@ -412,127 +434,149 @@ paths:
         '404': { description: Parcel not found }
         '500': { description: Internal server error }
 
-      tags:
-        - Driver & Consumer -endpoints
+      tags: [Driver / Consumer -endpoints]
       security:
         - ApiKeyAuth: []
 
-
   /v1/user/location/report:
     post:
-      summary: reportLocation(locationId | coordinates, report, user?) 
-      parameters:
-        - name: body
-          in: body
-          description: request body
-          required: true
-          schema:
-            type: object
-            properties:
-              locationId:
-                type: string
-                description: Location ID registered with iBoxen
-              report:
-                type: string
-                description: Report of the location (e.g., "damaged", "missing")
-              user:
-                type: string
-                description: User ID (optional)
+      summary: reportLocation (locationId | coordinates, report, user?)
+
+      requestBody:                         # ← replaces the old “parameters: – in: body”
+        required: true
+        description: request body
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [report]           # add locationId / coordinates if you need them
+              properties:
+                locationId:
+                  type: string
+                  description: Location ID registered with iBoxen
+                coordinates:
+                  type: string
+                  description: Latitude,Longitude (optional)
+                report:
+                  type: string
+                  description: Report of the location (e.g. “damaged”, “missing”)
+                user:
+                  type: string
+                  description: User ID (optional)
+            examples:
+              default:
+                value:
+                  locationId: loc-456
+                  coordinates: "59.334,18.065"
+                  report: damaged
+                  user: driver-123
+
       responses:
-        "204":
-          description: Report received
-        "400":
-          description: Invalid request
-        "401":
-          description: Unauthorized
-        "403":
-          description: Forbidden
-        "404":
-          description: Location not found
-        "500":
-          description: Internal server error
-      tags:
-        - Driver & Consumer -endpoints
+        '204': { description: Report received }
+        '400': { description: Invalid request }
+        '401': { description: Unauthorized }
+        '403': { description: Forbidden }
+        '404': { description: Location not found }
+        '500': { description: Internal server error }
+
+      tags: [Driver / Consumer -endpoints]
+      security:
+        - ApiKeyAuth: []
 
   /v1/user/latest-parcel:
     get:
-      summary: getLatestParcel(locationId | coordinates, user?)
+      summary: getLatestParcel (locationId | coordinates, user?)
       parameters:
         - name: locationId
           in: query
-          type: string
-          # required: true
           description: Location ID registered with iBoxen
+          schema: { type: string }
+
         - name: coordinates
           in: query
-          type: string
-          # required: true
           description: Latitude,Longitude
+          schema: { type: string }
+
         - name: user
           in: query
-          type: string
-          # required: true
           description: User ID
+          schema: { type: string }
+
       responses:
-        "200":
+        '200':
+          description: Latest parcel information
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [parcelId, status, boxId, compartment]
+                properties:
+                  parcelId: { type: string }
+                  status:   { type: string }
+                  boxId:    { type: string }
+                  compartment:   { type: string }
+
+                  logs:
+                    type: array
+                    items:
+                      type: object
+                      required: [type, timestamp, message]
+                      properties:
+                        type:      { type: string }
+                        timestamp: { type: string, format: date-time }
+                        message:   { type: string }
+
+              examples:                # ← wrapped so Swagger UI shows it
+                default:
+                  value:
+                    parcelId: parcel-001
+                    status:   on-way
+                    boxId:    6800e90ac1a98cc125bb79c6
+                    compartment:   '13'
+                    logs:
+                      - type: info
+                        timestamp: "2025-04-01T09:00:00Z"
+                        message: Parcel scanned by driver (driver-001)
+                      - type: error
+                        timestamp: "2025-04-01T09:01:00Z"
+                        message: Parcel scanned in the wrong location. \
+                                Scanned in location-001, allocated to location-002
+
+        '400': { description: Invalid request }
+        '401': { description: Unauthorized }
+        '403': { description: Forbidden }
+        '404': { description: Not found }
+        '500': { description: Internal server error }
+        '503': { description: Device offline }
+
+      tags: [Driver -endpoints]
+      security:
+        - ApiKeyAuth: []
+
+  /health:
+    get:
+      summary: Health check for this API
+      description: Returns HTTP&nbsp;200 when the service is up.
+
+      responses:
+        '200':
+          description: Service is healthy
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  parcelId: string
-                  status: string
-                  boxId: string
-                  locker: string
-                  logs: 
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        type: string
-                        timestamp: string
-                        message: string
-              example:
-                parcelId: parcel-001
-                status: on-way
-                boxId: 6800e90ac1a98cc125bb79c6
-                locker: 13
-                logs: 
-                  - type: info
-                    timestamp: 2025-04-01T09:00:00.000Z
-                    message: Parcel scanned by driver ( driver-001 )
-                  - type: error
-                    timestamp: 2025-04-01T09:01:00.000Z
-                    message: Parcel scanned in the wrong location. Scanned in location-001, allocated to location-002
-        "400":
-          description: Invalid request
-        "401":
-          description: Unauthorized
-        "403":
-          description: Forbidden
-        "404":
-          description: Not found
-        "500":
-          description: Internal server error
-        "503":
-          description: Device offline
-      tags:
-        - Driver -endpoints
-  /health:
-    get:
-      summary: Health check for this API
-      description: ""
-      parameters: []
-      responses:
-        "200":
-          content:
-            application/json:
-              example:
-                status: healthy
-      tags:
-        - Health
+                  status:
+                    type: string
+              examples:
+                default:
+                  value:
+                    status: healthy
+
+      tags: [Health]
       security:
         - ApiKeyAuth: []
+
 tags: []
 openapi: 3.0.1
 components:
@@ -560,11 +604,11 @@ components:
         timestamp:    { type: string, format: date-time }
         message:      { type: string }
 
-    OtherParcelInLocker:
+    OtherParcelIncompartment:
       type: object
       required: [type, timestamp, message]
       properties:
-        type:         { type: string, enum: [OtherParcelInLocker] }
+        type:         { type: string, enum: [OtherParcelIncompartment] }
         timestamp:    { type: string, format: date-time }
         message:      { type: string }
 
@@ -588,9 +632,9 @@ components:
 
     AllocationDeviation:
       oneOf:
-        - $ref: '#/components/schemas/OtherParcelInLocker'
+        - $ref: '#/components/schemas/OtherParcelIncompartment'
         - $ref: '#/components/schemas/ParcelTooLarge'
       discriminator:                            # ✓ OpenAPI-3.0 feature
         propertyName: type
         mapping:
-          OtherParcelInLocker: '#/components/schemas/OtherParcelInLocker'
+          OtherParcelIncompartment: '#/components/schemas/OtherParcelIncompartment'

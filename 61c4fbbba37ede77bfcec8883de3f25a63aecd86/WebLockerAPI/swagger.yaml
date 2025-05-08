@@ -195,51 +195,51 @@ paths:
       security:
         - ApiKeyAuth: []
 
-/v1/user/compartment/open:
-  post:
-    summary: openParcelCompartment (parcelId, locationId | coordinates, user?)
+  /v1/user/compartment/open:
+    post:
+      summary: openParcelCompartment (parcelId, locationId | coordinates, user?)
 
-    requestBody:                    # ← replaces the old  parameters: - in: body
-      required: true
-      description: request body
-      content:
-        application/json:
-          schema:
-            type: object
-            required: [parcelId]     # add others if they must be present
-            properties:
-              parcelId:
-                type: string
-                description: Parcel ID registered with iBoxen
-              user:
-                type: string
-                description: User ID (optional)
-              locationId:
-                type: string
-                description: Location ID (optional)
-              coordinates:
-                type: string
-                description: Latitude,Longitude (optional)
-          examples:
-            default:
-              value:
-                parcelId: parcel-001
-                user: driver-123
-                locationId: loc-456
-                coordinates: "59.334,18.065"
+      requestBody:                    # ← replaces the old  parameters: - in: body
+        required: true
+        description: request body
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [parcelId]     # add others if they must be present
+              properties:
+                parcelId:
+                  type: string
+                  description: Parcel ID registered with iBoxen
+                user:
+                  type: string
+                  description: User ID (optional)
+                locationId:
+                  type: string
+                  description: Location ID (optional)
+                coordinates:
+                  type: string
+                  description: Latitude,Longitude (optional)
+            examples:
+              default:
+                value:
+                  parcelId: parcel-001
+                  user: driver-123
+                  locationId: loc-456
+                  coordinates: "59.334,18.065"
 
-    responses:
-      '204': { description: Locker opened }
-      '400': { description: Invalid request }
-      '401': { description: Unauthorized }
-      '403': { description: Forbidden }
-      '404': { description: Not found }
-      '500': { description: Internal server error }
-      '503': { description: Device offline }
+      responses:
+        '204': { description: Locker opened }
+        '400': { description: Invalid request }
+        '401': { description: Unauthorized }
+        '403': { description: Forbidden }
+        '404': { description: Not found }
+        '500': { description: Internal server error }
+        '503': { description: Device offline }
 
-    tags: [Driver / Consumer -endpoints]
-    security:
-      - ApiKeyAuth: []
+      tags: [Driver / Consumer -endpoints]
+      security:
+        - ApiKeyAuth: []
 
   /v1/user/parcel/status:
     post:

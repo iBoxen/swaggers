@@ -410,6 +410,58 @@ paths:
     "fromDate": "2024-03-10T00:00:00.000Z"
   }
 }
+  /parcel/{parcelId}/retention:
+    post:
+      summary: Add a retention entry for the parcel
+      description: >
+        Pushes a timestamped retention update into **`parcel.retentionUpdates`**
+        and returns the new cumulative retention time.
+      parameters:
+        - in: path
+          name: parcelId
+          type: string
+          required: true
+          description: Parcel ID registered with iBoxen
+
+        - in: body
+          name: body                # name is required in Swagger 2
+          description: JSON payload
+          required: true
+          schema:
+            type: object
+            required: [retention]
+            properties:
+              retention:
+                type: number
+                format: double
+                description: >
+                  Retention increment (same unit your DB uses, e.g. **days**)
+
+      consumes:
+        - application/json
+      produces:
+        - application/json
+
+      responses:
+        '200':
+          description: Retention successfully updated
+          examples:
+            application/json: {
+              "totalRetention": 7,
+              "amountOfRetentionUpdates": 3
+            }
+
+        '400':
+          description: Empty body or Joi validation failed
+        '404':
+          description: Parcel not found
+        '500':
+          description: Unexpected server error
+
+      tags:
+        - Driver / Consumer -endpoints
+      security:
+        - ApiKeyAuth: []
 
 definitions:
 

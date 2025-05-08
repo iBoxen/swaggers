@@ -311,96 +311,111 @@ paths:
   /v1/user/report-hardware:
     post:
       summary: reportHardware(parcelId, status, user?)
-      parameters:
-        - name: body
-          in: body
-          description: request body
-          required: true
-          schema:
-            type: object
-            properties:
-              parcelId:
-                type: string
-                description: Parcel ID registered with iBoxen
-                example: parcel-001
-              deviation:
-                $ref: '#/components/schemas/HardwareDeviation'
-                description: Hardware deviation
-                examples:
-                  DoorDidNotOpen:
-                    value:
-                      type: DoorDidNotOpen
-                      timestamp: 2025-04-01T09:00:00.000Z
-                      message: Door did not open
-                  DoorDidNotClose:
-                    value:
-                      type: DoorDidNotClose
-                      timestamp: 2025-04-01T09:01:00.000Z
-                      message: Door did not close
-              user:
-                type: string
-                description: User ID (optional)
-              
+      description: >
+        Report a deviation that occurred due to malfunctioning hardware
+        (e.g. door did not open or close).
+      requestBody: 
+        description: request body
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                parcelId:
+                  type: string
+                  description: Parcel ID registered with iBoxen
+                  example: parcel-001
+                deviation:
+                  $ref: '#/components/schemas/HardwareDeviation'
+                  description: Hardware deviation
+                  examples:
+                    DoorDidNotOpen:
+                      value:
+                        type: DoorDidNotOpen
+                        timestamp: 2025-04-01T09:00:00.000Z
+                        message: Door did not open
+                    DoorDidNotClose:
+                      value:
+                        type: DoorDidNotClose
+                        timestamp: 2025-04-01T09:01:00.000Z
+                        message: Door did not close
+                user:
+                  type: string
+                  description: User ID (optional)   
       responses:
         "204":
           description: Report received
-        "400":
-          description: Invalid request
-        "401":
-          description: Unauthorized
-        "403":
-          description: Forbidden
-        "404":
-          description: Location not found
-        "500":
-          description: Internal server error
-      tags:
+        '400': { description: Invalid request }
+        '401': { description: Unauthorized }
+        '403': { description: Forbidden }
+        '404': { description: Location not found }
+        '500': { description: Internal server error }
+        tags:
         - Driver / Consumer -endpoints
+        security:
+          - ApiKeyAuth: []
+        
   /v1/user/report-allocation:
     post:
-      summary: reportAllocation(parcelId, status, user?)
-      parameters:
-        - name: body
-          in: body
-          description: request body
-          required: true
-          schema:
-            type: object
-            properties:
-              parcelId:
-                type: string
-                description: Parcel ID registered with iBoxen
-              deviation:
-                $ref: '#/components/schemas/AllocationDeviation'
-                description: Allocation deviation
-                examples:
-                  OtherParcelInLocker:
-                    value:
-                      type: OtherParcelInLocker
-                      timestamp: 2025-04-01T09:00:00.000Z
-                      message: Other parcel in locker
-                  ParcelTooLarge:
-                    value:
-                      type: ParcelTooLarge
-                      timestamp: 2025-04-01T09:01:00.000Z
-                      message: Parcel too large
-              user:
-                type: string
-                description: User ID (optional)
+      summary: reportAllocation(parcelId, deviation, user?)
+      description: >
+        Report an deviation that occurred while trying to put a parcel
+        in a locker - e.g. the locker already contains another parcel or the
+        parcel is too large.
+      requestBody:                                   # ← replaces the old `in: body`
+        required: true
+        description: request body
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [parcelId, deviation]
+              properties:
+                parcelId:
+                  type: string
+                  description: Parcel ID registered with iBoxen
+                deviation:                            # keep the description
+                  description: Allocation deviation
+                  allOf:
+                    - $ref: '#/components/schemas/AllocationDeviation'
+                user:
+                  type: string
+                  description: User ID (optional)
+            examples:                                 # ← multiple named samples
+              OtherParcelInLocker:
+                summary: Another parcel was already in the locker
+                value:
+                  parcelId: parcel-001
+                  deviation:
+                    type: OtherParcelInLocker
+                    timestamp: "2025-04-01T09:00:00Z"
+                    message: Other parcel in locker
+                  user: driver-123
+              ParcelTooLarge:
+                summary: Parcel does not fit in the allocated locker
+                value:
+                  parcelId: parcel-002
+                  deviation:
+                    type: ParcelTooLarge
+                    timestamp: "2025-04-01T09:01:00Z"
+                    message: Parcel too large
+                  user: driver-456
+
       responses:
-        "204":
+        '204':
           description: Report received
-        "400":
-          description: Invalid request
-        "401":
-          description: Unauthorized
-        "403":
-          description: Forbidden
-        "404":
-          description: Parcel not found
-        "500":
-          description: Internal server error
+        '400': { description: Invalid request }
+        '401': { description: Unauthorized }
+        '403': { description: Forbidden }
+        '404': { description: Parcel not found }
+        '500': { description: Internal server error }
+
       tags:
+        - Driver / Consumer -endpoints
+      security:
+        - ApiKeyAuth: []
+
         - Driver / Consumer -endpoints
 
 

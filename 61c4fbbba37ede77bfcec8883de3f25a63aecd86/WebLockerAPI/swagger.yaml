@@ -382,8 +382,7 @@ paths:
         '403': { description: Forbidden }
         '404': { description: Location not found }
         '500': { description: Internal server error }
-      tags:
-      - Driver / Consumer -endpoints
+      tags: [Driver / Consumer -endpoints]
       security:
         - ApiKeyAuth: []
         
@@ -442,8 +441,7 @@ paths:
         '404': { description: Parcel not found }
         '500': { description: Internal server error }
 
-      tags:
-        - Driver / Consumer -endpoints
+      tags: [Driver / Consumer -endpoints]
       security:
         - ApiKeyAuth: []
 

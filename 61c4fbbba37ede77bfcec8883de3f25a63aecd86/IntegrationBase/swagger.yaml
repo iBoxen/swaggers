@@ -569,7 +569,7 @@ definitions:
     example:
       userId:   driver-123
       parcelId: parcel-001
-      name:     on-way
+      name:     marked-for-return
       data:
         extra:
           ReasonCode:  BT

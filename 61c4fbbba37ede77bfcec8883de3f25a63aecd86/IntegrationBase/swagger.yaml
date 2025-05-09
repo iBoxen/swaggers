@@ -549,9 +549,7 @@ definitions:
 
   POST_status_body:
     type: object
-    required:
-      - parcelId
-      - name
+    required: [parcelId, name]
     properties:
       userId:
         type: string
@@ -559,7 +557,23 @@ definitions:
         type: string
       name:
         type: string
-        description: 'Status names: on-way, marked-for-return, cancelled'
+        description: Status names: on-way, marked-for-return, cancelled
+      data:
+        type: object
+        description: Additional data, e.g. locationId, coordinates, etc.
+        properties:
+          extra:
+            type: object               # ← object, not string
+            description: Additional data, e.g substatuses, etc.
+    example:
+      userId:   driver-123
+      parcelId: parcel-001
+      name:     on-way
+      data:
+        extra:
+          ReasonCode:  BT
+          ActionCode:  AU
+          description: "BT - Överskriden liggtid. Åtgärd: AU - Väntar på upphämtning"
         
 #
 

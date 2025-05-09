@@ -437,7 +437,7 @@ paths:
                 type: number
                 format: double
                 description: >
-                  Retention increment (same unit your DB uses, e.g. **days**)
+                  Retention increment in hours
 
       consumes:
         - application/json

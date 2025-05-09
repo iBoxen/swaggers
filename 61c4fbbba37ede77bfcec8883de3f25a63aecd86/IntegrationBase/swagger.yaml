@@ -410,7 +410,7 @@ paths:
     "fromDate": "2024-03-10T00:00:00.000Z"
   }
 }
-  /parcel/{parcelId}/retention:
+  /delivery/retention:
     post:
       summary: Modify retention time for parcel
       description: >
@@ -419,10 +419,7 @@ paths:
         Retention updates stack additively.
       parameters:
         - in: path
-          name: parcelId
-          type: string
-          required: true
-          description: Parcel ID registered with iBoxen
+         
 
         - in: body
           name: body                # name is required in Swagger 2
@@ -432,6 +429,10 @@ paths:
             type: object
             required: [retention]
             properties:
+              parcelId:
+                type: string
+                required: true
+                description: Parcel ID registered with iBoxen
               retention:
                 type: number
                 format: double
@@ -557,7 +558,7 @@ definitions:
         type: string
       name:
         type: string
-        description: Status names: on-way, marked-for-return, cancelled
+        description: Status names - on-way, marked-for-return, cancelled
       data:
         type: object
         description: Additional data, e.g. locationId, coordinates, etc.

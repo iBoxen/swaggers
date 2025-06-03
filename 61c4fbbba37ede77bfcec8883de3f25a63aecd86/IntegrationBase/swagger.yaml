@@ -513,6 +513,10 @@ definitions:
         items:
           type: string
         description: 'Provided if a specific location is wanted, prioritized by array index. Can be either locationId or locationNumber'
+      ageControl:
+        type: integer
+        description: 'Age in years required for the consumer to be able to retreive the parcel from the box'
+        example: 18
 
 #
 

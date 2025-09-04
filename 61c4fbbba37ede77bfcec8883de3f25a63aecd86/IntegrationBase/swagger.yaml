@@ -517,6 +517,9 @@ definitions:
         type: integer
         description: 'Age in years required for the consumer to be able to retreive the parcel from the box'
         example: 18
+      senderName:
+        type: string
+        description: Ecommerce name
 
 #
 

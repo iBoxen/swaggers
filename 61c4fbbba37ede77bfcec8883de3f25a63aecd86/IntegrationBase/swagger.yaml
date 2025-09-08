@@ -577,7 +577,7 @@ definitions:
       userId:   driver-123
       parcelId: parcel-001
       name:     marked-for-return
-      data:
+      #data:
         extra:
           ReasonCode:  BT
           ActionCode:  AU

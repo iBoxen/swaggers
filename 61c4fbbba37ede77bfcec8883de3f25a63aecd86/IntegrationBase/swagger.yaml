@@ -576,13 +576,7 @@ definitions:
     example:
       userId:   driver-123
       parcelId: parcel-001
-      name:     marked-for-return
-      #data:
-      #  extra:
-       #   ReasonCode:  BT
-        #  ActionCode:  AU
-         # description: "BT - Överskriden liggtid. Åtgärd: AU - Väntar på upphämtning"
-        
+      name:     marked-for-return        
 #
 
   --- objects ---:

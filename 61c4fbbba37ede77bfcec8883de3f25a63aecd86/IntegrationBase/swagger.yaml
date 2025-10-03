@@ -517,6 +517,10 @@ definitions:
         type: integer
         description: 'Age in years required for the consumer to be able to retreive the parcel from the box'
         example: 18
+      hashedSocial:
+        type: string
+        description: The hashed personal number string, md5("199910141234")
+        example: ZO3NXZrpxJE57bLZMMizHP0ZQ4yh7Wa
       senderName:
         type: string
         description: Ecommerce name
@@ -576,7 +580,13 @@ definitions:
     example:
       userId:   driver-123
       parcelId: parcel-001
-      name:     marked-for-return        
+      name:     marked-for-return
+      #data:
+      #  extra:
+       #   ReasonCode:  BT
+        #  ActionCode:  AU
+         # description: "BT - Överskriden liggtid. Åtgärd: AU - Väntar på upphämtning"
+        
 #
 
   --- objects ---:

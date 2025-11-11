@@ -159,7 +159,7 @@ paths:
           examples:
             application/json: {"status": "ok", "message": "Parcel is pre-booked" }
     patch:
-      summary: Update delivery booking details (Soon to be implemented)
+      summary: Update delivery booking details
       description: Used to update parcel with new details or changing the target booked location
       consumes:
       - application/json

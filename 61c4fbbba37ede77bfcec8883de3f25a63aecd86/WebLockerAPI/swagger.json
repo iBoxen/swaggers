@@ -1,0 +1,2292 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "WebLocker API"
+  },
+  "components": {
+    "schemas": {},
+    "parameters": {}
+  },
+  "paths": {
+    "/v1/user/parcel/status": {
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "parcelId": {
+                    "type": "string",
+                    "example": "parcel-001"
+                  },
+                  "status": {
+                    "type": "string",
+                    "example": "delivered"
+                  },
+                  "user": {
+                    "type": "string",
+                    "example": "driver-123"
+                  },
+                  "ts": {
+                    "type": "string",
+                    "example": "2025-07-16T10:08:21.990Z"
+                  }
+                },
+                "required": [
+                  "parcelId",
+                  "status"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Parcel status updated"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "An error occurred"
+                    },
+                    "ok": {
+                      "type": "boolean",
+                      "default": false,
+                      "example": false
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "example": {
+                    "message": "Bad Request",
+                    "ok": false
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "An error occurred"
+                    },
+                    "ok": {
+                      "type": "boolean",
+                      "default": false,
+                      "example": false
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "example": {
+                    "message": "Unauthorized",
+                    "ok": false
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "An error occurred"
+                    },
+                    "ok": {
+                      "type": "boolean",
+                      "default": false,
+                      "example": false
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "example": {
+                    "message": "Forbidden",
+                    "ok": false
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "An error occurred"
+                    },
+                    "ok": {
+                      "type": "boolean",
+                      "default": false,
+                      "example": false
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "example": {
+                    "message": "Not found",
+                    "ok": false
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "An error occurred"
+                    },
+                    "ok": {
+                      "type": "boolean",
+                      "default": false,
+                      "example": false
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "example": {
+                    "message": "Internal server error",
+                    "ok": false
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/user/lost-parcel": {
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "barcodes": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "example": [
+                      "barcode1",
+                      "barcode2"
+                    ]
+                  },
+                  "originalParcelId": {
+                    "type": "string",
+                    "example": "parcel-001"
+                  }
+                },
+                "required": [
+                  "barcodes",
+                  "originalParcelId"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Lost parcel reported",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Operation successful"
+                    },
+                    "ok": {
+                      "type": "boolean",
+                      "default": true,
+                      "example": true
+                    },
+                    "shouldPickup": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "newCompartment": {
+                      "type": "string",
+                      "nullable": true,
+                      "example": "A1"
+                    }
+                  },
+                  "required": [
+                    "message",
+                    "shouldPickup",
+                    "newCompartment"
+                  ],
+                  "example": {
+                    "message": "Lost parcel reported",
+                    "ok": true,
+                    "shouldPickup": false,
+                    "newCompartment": "A1"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "An error occurred"
+                    },
+                    "ok": {
+                      "type": "boolean",
+                      "default": false,
+                      "example": false
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "example": {
+                    "message": "Bad Request",
+                    "ok": false
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "An error occurred"
+                    },
+                    "ok": {
+                      "type": "boolean",
+                      "default": false,
+                      "example": false
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "example": {
+                    "message": "Unauthorized",
+                    "ok": false
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "An error occurred"
+                    },
+                    "ok": {
+                      "type": "boolean",
+                      "default": false,
+                      "example": false
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "example": {
+                    "message": "Internal server error",
+                    "ok": false
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/user/parcel": {
+      "get": {
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "example": "parcel-001"
+            },
+            "required": false,
+            "name": "parcelId",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get parcel metadata",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "parcelId": {
+                      "type": "string",
+                      "example": "parcel-001"
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "on-way"
+                    },
+                    "compartment": {
+                      "type": "string",
+                      "example": "13",
+                      "description": "door number"
+                    }
+                  },
+                  "required": [
+                    "parcelId",
+                    "status",
+                    "compartment"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "An error occurred"
+                    },
+                    "ok": {
+                      "type": "boolean",
+                      "default": false,
+                      "example": false
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "example": {
+                    "message": "Parcel ID required",
+                    "ok": false
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "An error occurred"
+                    },
+                    "ok": {
+                      "type": "boolean",
+                      "default": false,
+                      "example": false
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "example": {
+                    "message": "Unauthorized",
+                    "ok": false
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Parcel not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "An error occurred"
+                    },
+                    "ok": {
+                      "type": "boolean",
+                      "default": false,
+                      "example": false
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "example": {
+                    "message": "Parcel not found",
+                    "ok": false
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "An error occurred"
+                    },
+                    "ok": {
+                      "type": "boolean",
+                      "default": false,
+                      "example": false
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "example": {
+                    "message": "Internal server error",
+                    "ok": false
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/user/compartment/sense": {
+      "get": {
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "example": "parcel-001"
+            },
+            "required": true,
+            "name": "parcelId",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get open compartments",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "opencompartments": {
+                      "type": "array",
+                      "items": {
+                        "type": "number"
+                      },
+                      "example": [
+                        1,
+                        2,
+                        3
+                      ]
+                    }
+                  },
+                  "required": [
+                    "opencompartments"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Parcel ID required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "An error occurred"
+                    },
+                    "ok": {
+                      "type": "boolean",
+                      "default": false,
+                      "example": false
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "example": {
+                    "message": "Parcel ID required",
+                    "ok": false
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Carrier ID missing from context",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "An error occurred"
+                    },
+                    "ok": {
+                      "type": "boolean",
+                      "default": false,
+                      "example": false
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "example": {
+                    "message": "Carrier ID missing from context",
+                    "ok": false
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "An error occurred"
+                    },
+                    "ok": {
+                      "type": "boolean",
+                      "default": false,
+                      "example": false
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "example": {
+                    "message": "Unauthorized",
+                    "ok": false
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Parcel not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "An error occurred"
+                    },
+                    "ok": {
+                      "type": "boolean",
+                      "default": false,
+                      "example": false
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "example": {
+                    "message": "Parcel not found",
+                    "ok": false
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "An error occurred"
+                    },
+                    "ok": {
+                      "type": "boolean",
+                      "default": false,
+                      "example": false
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "example": {
+                    "message": "Internal server error",
+                    "ok": false
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/user/compartment/open": {
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "parcelId": {
+                    "type": "string",
+                    "example": "parcel-001"
+                  },
+                  "user": {
+                    "type": "string",
+                    "example": "driver-123"
+                  },
+                  "locationId": {
+                    "type": "string",
+                    "example": "loc-456"
+                  },
+                  "coordinates": {
+                    "type": "string",
+                    "example": "59.334,18.065"
+                  }
+                },
+                "required": [
+                  "parcelId",
+                  "user",
+                  "locationId"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Compartment opened",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Operation successful"
+                    },
+                    "ok": {
+                      "type": "boolean",
+                      "default": true,
+                      "example": true
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "example": {
+                    "message": "Compartment opened",
+                    "ok": true
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid parcel status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "An error occurred"
+                    },
+                    "ok": {
+                      "type": "boolean",
+                      "default": false,
+                      "example": false
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "example": {
+                    "message": "Invalid parcel status",
+                    "ok": false
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "An error occurred"
+                    },
+                    "ok": {
+                      "type": "boolean",
+                      "default": false,
+                      "example": false
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "example": {
+                    "message": "Unauthorized",
+                    "ok": false
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Parcel not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "An error occurred"
+                    },
+                    "ok": {
+                      "type": "boolean",
+                      "default": false,
+                      "example": false
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "example": {
+                    "message": "Parcel not found",
+                    "ok": false
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "An error occurred"
+                    },
+                    "ok": {
+                      "type": "boolean",
+                      "default": false,
+                      "example": false
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "example": {
+                    "message": "Internal server error",
+                    "ok": false
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/user/compartment/change": {
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "parcelId": {
+                    "type": "string",
+                    "example": "parcel-001"
+                  },
+                  "size": {
+                    "type": "string",
+                    "enum": [
+                      "XS",
+                      "S",
+                      "M",
+                      "L",
+                      "XL"
+                    ],
+                    "example": "L"
+                  },
+                  "user": {
+                    "type": "string",
+                    "example": "driver-123"
+                  }
+                },
+                "required": [
+                  "parcelId",
+                  "user"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Compartment size changed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Operation successful"
+                    },
+                    "ok": {
+                      "type": "boolean",
+                      "default": true,
+                      "example": true
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "example": {
+                    "message": "Compartment size changed",
+                    "ok": true,
+                    "newBox": "new box"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "An error occurred"
+                    },
+                    "ok": {
+                      "type": "boolean",
+                      "default": false,
+                      "example": false
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "example": {
+                    "message": "Bad Request",
+                    "ok": false
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "An error occurred"
+                    },
+                    "ok": {
+                      "type": "boolean",
+                      "default": false,
+                      "example": false
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "example": {
+                    "message": "Unauthorized",
+                    "ok": false
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Parcel or Location not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "An error occurred"
+                    },
+                    "ok": {
+                      "type": "boolean",
+                      "default": false,
+                      "example": false
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "example": {
+                    "message": "Parcel not found",
+                    "ok": false
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "An error occurred"
+                    },
+                    "ok": {
+                      "type": "boolean",
+                      "default": false,
+                      "example": false
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "example": {
+                    "message": "Internal server error",
+                    "ok": false
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/user/report-hardware": {
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "parcelId": {
+                    "type": "string",
+                    "example": "parcel-001"
+                  },
+                  "deviation": {
+                    "type": "object",
+                    "properties": {
+                      "timestamp": {
+                        "type": "string",
+                        "nullable": true,
+                        "format": "date-time",
+                        "example": "2025-07-16T10:08:21.990Z"
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "OtherParcelInCompartment"
+                      },
+                      "type": {
+                        "type": "string",
+                        "enum": [
+                          "OtherParcelInCompartment",
+                          "FailToOpenLock",
+                          "FailToCloseLock",
+                          "ParcelTooBig"
+                        ],
+                        "example": "OtherParcelInCompartment"
+                      }
+                    },
+                    "required": [
+                      "timestamp",
+                      "type"
+                    ]
+                  },
+                  "user": {
+                    "type": "string",
+                    "example": "string"
+                  }
+                },
+                "required": [
+                  "parcelId",
+                  "deviation",
+                  "user"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Hardware issue reported",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Operation successful"
+                    },
+                    "ok": {
+                      "type": "boolean",
+                      "default": true,
+                      "example": true
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "example": {
+                    "message": "Hardware issue reported",
+                    "ok": true
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "An error occurred"
+                    },
+                    "ok": {
+                      "type": "boolean",
+                      "default": false,
+                      "example": false
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "example": {
+                    "message": "Bad Request",
+                    "ok": false
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "An error occurred"
+                    },
+                    "ok": {
+                      "type": "boolean",
+                      "default": false,
+                      "example": false
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "example": {
+                    "message": "Unauthorized",
+                    "ok": false
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Parcel not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "An error occurred"
+                    },
+                    "ok": {
+                      "type": "boolean",
+                      "default": false,
+                      "example": false
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "example": {
+                    "message": "Parcel not found",
+                    "ok": false
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/user/report-allocation": {
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "parcelId": {
+                    "type": "string",
+                    "example": "parcel-001"
+                  },
+                  "deviation": {
+                    "type": "object",
+                    "properties": {
+                      "timestamp": {
+                        "type": "string",
+                        "nullable": true,
+                        "format": "date-time",
+                        "example": "2025-07-16T10:08:21.990Z"
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "OtherParcelInCompartment"
+                      },
+                      "type": {
+                        "type": "string",
+                        "enum": [
+                          "OtherParcelInCompartment",
+                          "FailToOpenLock",
+                          "FailToCloseLock",
+                          "ParcelTooBig"
+                        ],
+                        "example": "OtherParcelInCompartment"
+                      }
+                    },
+                    "required": [
+                      "timestamp",
+                      "type"
+                    ]
+                  },
+                  "user": {
+                    "type": "string",
+                    "example": "driver-123"
+                  }
+                },
+                "required": [
+                  "parcelId",
+                  "deviation",
+                  "user"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Allocation issue reported",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Operation successful"
+                    },
+                    "ok": {
+                      "type": "boolean",
+                      "default": true,
+                      "example": true
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "example": {
+                    "message": "Allocation issue reported",
+                    "ok": true
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "An error occurred"
+                    },
+                    "ok": {
+                      "type": "boolean",
+                      "default": false,
+                      "example": false
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "example": {
+                    "message": "Bad Request",
+                    "ok": false
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/user/missions": {
+      "get": {
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "example": "loc-123"
+            },
+            "required": false,
+            "name": "locationId",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "example": "59.334,18.065"
+            },
+            "required": false,
+            "name": "coordinates",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "example": "driver-123"
+            },
+            "required": false,
+            "name": "user",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of delivery- and pickup-missions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "parcels": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "parcelId": {
+                            "type": "string",
+                            "example": "parcel-001"
+                          },
+                          "currentStatus": {
+                            "type": "string",
+                            "example": "on-way"
+                          },
+                          "currentStatusCreated": {
+                            "type": "string",
+                            "nullable": true,
+                            "format": "date-time",
+                            "example": "2025-07-16T10:08:21.990Z"
+                          },
+                          "compartment": {
+                            "type": "string",
+                            "example": "13"
+                          },
+                          "carrierId": {
+                            "type": "string",
+                            "example": "carrier-123"
+                          },
+                          "carrier": {
+                            "type": "string",
+                            "example": "carrier-123"
+                          }
+                        },
+                        "required": [
+                          "parcelId",
+                          "currentStatus",
+                          "currentStatusCreated",
+                          "compartment",
+                          "carrierId",
+                          "carrier"
+                        ]
+                      }
+                    },
+                    "pickups": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "parcelId": {
+                            "type": "string",
+                            "example": "pickup-001"
+                          },
+                          "currentStatus": {
+                            "type": "string",
+                            "example": "marked-for-return"
+                          },
+                          "currentStatusCreated": {
+                            "type": "string",
+                            "nullable": true,
+                            "format": "date-time",
+                            "example": "2025-07-16T10:08:21.990Z"
+                          },
+                          "compartment": {
+                            "type": "string",
+                            "example": "14"
+                          },
+                          "carrierId": {
+                            "type": "string",
+                            "example": "carrier-123"
+                          },
+                          "carrier": {
+                            "type": "string",
+                            "example": "carrier-123"
+                          }
+                        },
+                        "required": [
+                          "parcelId",
+                          "currentStatus",
+                          "currentStatusCreated",
+                          "compartment",
+                          "carrierId",
+                          "carrier"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "parcels",
+                    "pickups"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "An error occurred"
+                    },
+                    "ok": {
+                      "type": "boolean",
+                      "default": false,
+                      "example": false
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "example": {
+                    "message": "Location ID or coordinates required",
+                    "ok": false
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Location not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "An error occurred"
+                    },
+                    "ok": {
+                      "type": "boolean",
+                      "default": false,
+                      "example": false
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "example": {
+                    "message": "Location not found",
+                    "ok": false
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "An error occurred"
+                    },
+                    "ok": {
+                      "type": "boolean",
+                      "default": false,
+                      "example": false
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "example": {
+                    "message": "Internal server error",
+                    "ok": false
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/auth/login": {
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "locationId": {
+                    "type": "string",
+                    "example": "loc-123"
+                  },
+                  "driverId": {
+                    "type": "string",
+                    "example": "driver-456"
+                  },
+                  "loginSecret": {
+                    "type": "string",
+                    "example": "secret-789"
+                  }
+                },
+                "required": [
+                  "locationId",
+                  "driverId",
+                  "loginSecret"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "token": {
+                      "type": "string",
+                      "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                    }
+                  },
+                  "required": [
+                    "token"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "An error occurred"
+                    },
+                    "ok": {
+                      "type": "boolean",
+                      "default": false,
+                      "example": false
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "example": {
+                    "message": "Invalid secret or expired",
+                    "ok": false
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/location/device-config": {
+      "get": {
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "example": "iot-device-123"
+            },
+            "required": true,
+            "name": "id",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get device configuration",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "_id": {
+                      "type": "string",
+                      "example": "60d5ecb8b392d20015f8e5b1"
+                    },
+                    "syncTimeout": {
+                      "type": "number",
+                      "example": 1800000,
+                      "description": "Timeout in ms for sync operations"
+                    },
+                    "address": {
+                      "type": "object",
+                      "properties": {
+                        "street": {
+                          "type": "string",
+                          "example": "Gatan 1"
+                        },
+                        "city": {
+                          "type": "string",
+                          "example": "Stockholm"
+                        },
+                        "zip": {
+                          "type": "string",
+                          "example": "12345"
+                        },
+                        "country": {
+                          "type": "string",
+                          "example": "Sweden"
+                        }
+                      },
+                      "description": "Location address"
+                    },
+                    "boxTypes": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "code": {
+                            "type": "string",
+                            "example": "S"
+                          },
+                          "height": {
+                            "type": "number",
+                            "example": 1
+                          },
+                          "index": {
+                            "type": "number",
+                            "example": 1
+                          }
+                        },
+                        "required": [
+                          "code",
+                          "height",
+                          "index"
+                        ]
+                      }
+                    },
+                    "controllers": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "controllerId": {
+                            "type": "string",
+                            "example": "60d5ecb8b392d20015f8e5b1"
+                          },
+                          "iotDeviceId": {
+                            "type": "string",
+                            "example": "iot-device-123"
+                          },
+                          "mark": {
+                            "type": "string",
+                            "example": "A"
+                          },
+                          "grid": {
+                            "type": "object",
+                            "properties": {
+                              "columns": {
+                                "type": "number"
+                              },
+                              "rows": {
+                                "type": "number"
+                              },
+                              "indexing": {
+                                "type": "object",
+                                "properties": {
+                                  "cellOrder": {
+                                    "type": "string",
+                                    "enum": [
+                                      "column-major"
+                                    ]
+                                  },
+                                  "base": {
+                                    "type": "number"
+                                  }
+                                },
+                                "required": [
+                                  "cellOrder",
+                                  "base"
+                                ]
+                              },
+                              "columnsLayout": {
+                                "type": "array",
+                                "items": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object",
+                                    "properties": {
+                                      "code": {
+                                        "type": "string",
+                                        "example": "S"
+                                      },
+                                      "height": {
+                                        "type": "number",
+                                        "example": 1
+                                      },
+                                      "lockerNumber": {
+                                        "type": "number",
+                                        "nullable": true,
+                                        "example": 1
+                                      },
+                                      "port": {
+                                        "type": "number",
+                                        "example": 0
+                                      },
+                                      "physicalSlotIndex": {
+                                        "type": "number",
+                                        "example": 0
+                                      }
+                                    },
+                                    "required": [
+                                      "code",
+                                      "height",
+                                      "lockerNumber"
+                                    ]
+                                  }
+                                }
+                              }
+                            },
+                            "required": [
+                              "columns",
+                              "rows",
+                              "indexing",
+                              "columnsLayout"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "controllerId",
+                          "iotDeviceId",
+                          "mark",
+                          "grid"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "_id",
+                    "syncTimeout",
+                    "address",
+                    "boxTypes",
+                    "controllers"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "An error occurred"
+                    },
+                    "ok": {
+                      "type": "boolean",
+                      "default": false,
+                      "example": false
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "example": {
+                    "message": "Authentication error",
+                    "ok": false
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "An error occurred"
+                    },
+                    "ok": {
+                      "type": "boolean",
+                      "default": false,
+                      "example": false
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "example": {
+                    "message": "Device or location not found",
+                    "ok": false
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "An error occurred"
+                    },
+                    "ok": {
+                      "type": "boolean",
+                      "default": false,
+                      "example": false
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "example": {
+                    "message": "Internal server error",
+                    "ok": false
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/location/available-sizes": {
+      "get": {
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "example": "loc-123"
+            },
+            "required": true,
+            "name": "locationId",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get available box sizes for a location",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "sizes": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "example": [
+                        "S",
+                        "M",
+                        "L"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "sizes"
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "An error occurred"
+                    },
+                    "ok": {
+                      "type": "boolean",
+                      "default": false,
+                      "example": false
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "example": {
+                    "message": "Location not found",
+                    "ok": false
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "An error occurred"
+                    },
+                    "ok": {
+                      "type": "boolean",
+                      "default": false,
+                      "example": false
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "example": {
+                    "message": "Internal server error",
+                    "ok": false
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/location/missions": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Get missions for kiosk",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "parcels": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "parcelId": {
+                            "type": "string",
+                            "example": "parcel-001"
+                          },
+                          "currentStatus": {
+                            "type": "string",
+                            "example": "on-way"
+                          },
+                          "currentStatusCreated": {
+                            "type": "string",
+                            "nullable": true,
+                            "format": "date-time",
+                            "example": "2025-07-16T10:08:21.990Z"
+                          },
+                          "compartment": {
+                            "type": "string",
+                            "example": "13"
+                          },
+                          "carrierId": {
+                            "type": "string",
+                            "example": "carrier-123"
+                          },
+                          "carrier": {
+                            "type": "string",
+                            "example": "carrier-123"
+                          }
+                        },
+                        "required": [
+                          "parcelId",
+                          "currentStatus",
+                          "currentStatusCreated",
+                          "compartment",
+                          "carrierId",
+                          "carrier"
+                        ]
+                      }
+                    },
+                    "pickups": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "parcelId": {
+                            "type": "string",
+                            "example": "pickup-001"
+                          },
+                          "currentStatus": {
+                            "type": "string",
+                            "example": "marked-for-return"
+                          },
+                          "currentStatusCreated": {
+                            "type": "string",
+                            "nullable": true,
+                            "format": "date-time",
+                            "example": "2025-07-16T10:08:21.990Z"
+                          },
+                          "compartment": {
+                            "type": "string",
+                            "example": "14"
+                          },
+                          "carrierId": {
+                            "type": "string",
+                            "example": "carrier-123"
+                          },
+                          "carrier": {
+                            "type": "string",
+                            "example": "carrier-123"
+                          }
+                        },
+                        "required": [
+                          "parcelId",
+                          "currentStatus",
+                          "currentStatusCreated",
+                          "compartment",
+                          "carrierId",
+                          "carrier"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "parcels",
+                    "pickups"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "An error occurred"
+                    },
+                    "ok": {
+                      "type": "boolean",
+                      "default": false,
+                      "example": false
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "example": {
+                    "message": "Unauthorized",
+                    "ok": false
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "An error occurred"
+                    },
+                    "ok": {
+                      "type": "boolean",
+                      "default": false,
+                      "example": false
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "example": {
+                    "message": "Internal server error",
+                    "ok": false
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/location/parcels-sync": {
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "parcels": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "parcelId": {
+                          "type": "string",
+                          "example": "parcel-001"
+                        },
+                        "carrier": {
+                          "type": "string",
+                          "example": "60d5ecb8b392d20015f8e5b1"
+                        },
+                        "created": {
+                          "type": "string",
+                          "nullable": true,
+                          "format": "date-time",
+                          "example": "2025-07-16T10:08:21.990Z"
+                        },
+                        "status": {
+                          "type": "string",
+                          "example": "on-way"
+                        }
+                      },
+                      "required": [
+                        "parcelId",
+                        "carrier"
+                      ]
+                    }
+                  }
+                },
+                "required": [
+                  "parcels"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Parcels sync processing results",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "parcels": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "parcelId": {
+                            "type": "string",
+                            "example": "parcel-001"
+                          },
+                          "success": {
+                            "type": "boolean",
+                            "example": true
+                          },
+                          "message": {
+                            "type": "string",
+                            "example": "Synced"
+                          }
+                        },
+                        "required": [
+                          "parcelId",
+                          "success"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "parcels"
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "An error occurred"
+                    },
+                    "ok": {
+                      "type": "boolean",
+                      "default": false,
+                      "example": false
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "example": {
+                    "message": "Internal server error",
+                    "ok": false
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

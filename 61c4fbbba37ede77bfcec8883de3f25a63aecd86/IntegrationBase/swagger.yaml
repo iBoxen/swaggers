@@ -599,6 +599,8 @@ definitions:
     properties:
       userId:
         type: string
+      phoneNumber:
+        type: string
 
 
 #
